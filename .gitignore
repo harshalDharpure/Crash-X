@@ -1,0 +1,30 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Large data (download separately — see README)
+video1500/
+*.mp4
+
+# Model weights (>100MB GitHub limit; train locally or see MODEL_WEIGHTS.md)
+outputs/crashlogic_7b_lora/adapter_model.safetensors
+outputs/crashlogic_7b_lora/checkpoint-*/
+outputs/crashlogic_7b_lora/training_args.bin
+outputs/crashlogic_7b_lora/tokenizer.json
+
+# Cache
+.cache/
+*.log.nohup
+
+# OS
+.DS_Store
+Thumbs.db

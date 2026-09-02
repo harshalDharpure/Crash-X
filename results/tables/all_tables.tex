@@ -1,0 +1,89 @@
+% Table I — Main Captioning Quality
+\begin{tabular}{lcccccc}
+\toprule
+Method & BLEU-4 & ROUGE-L & METEOR & CIDEr & BERTScore & Explanation-BERTScore \\
+\midrule
+CrashLogic-7B (Greedy) & 0.142 & 0.336 & 0.371 & 0.508 & 0.686 & 0.686 \\
+CrashLogic-7B + SEASON & 0.140 & 0.338 & 0.365 & 0.507 & 0.684 & 0.684 \\
+Zero-shot Qwen2.5-VL-7B & 0.016 & 0.160 & 0.203 & 0.338 & 0.486 & 0.486 \\
+\bottomrule
+\end{tabular}
+
+
+% Table II — Temporal & Forensic Reasoning
+\begin{tabular}{lccccc}
+\toprule
+Method & tIoU & THR@0.25 & THR@0.50 & ArgusCost-H & ArgusCost-O \\
+\midrule
+CrashLogic-7B (Greedy) & 0.373 & 0.573 & 0.440 & 0.223 & 0.107 \\
+CrashLogic-7B + SEASON & 0.375 & 0.573 & 0.427 & 0.227 & 0.112 \\
+Zero-shot Qwen2.5-VL-7B & 0.012 & 0.020 & 0.013 & 0.227 & 0.462 \\
+\bottomrule
+\end{tabular}
+
+
+% Table III — Structured Field Accuracy
+\begin{tabular}{lccccc}
+\toprule
+Method & Severity Acc & Impact Jaccard & Vehicle Jaccard & Weather Jaccard & Timestamp ParseRate \\
+\midrule
+CrashLogic-7B (Greedy) & 0.460 & 0.516 & 0.570 & 0.880 & 1.000 \\
+CrashLogic-7B + SEASON & 0.467 & 0.511 & 0.530 & 0.887 & 1.000 \\
+Zero-shot Qwen2.5-VL-7B & 0.080 & 0.223 & 0.349 & 0.157 & 0.280 \\
+\bottomrule
+\end{tabular}
+
+
+% Table IV — Severity-Stratified (CrashLogic-7B + SEASON)
+\begin{tabular}{lccccc}
+\toprule
+Severity & tIoU & BERTScore & ArgusCost-H & ArgusCost-O & n \\
+\midrule
+Minor & 0.390 & 0.683 & 0.226 & 0.101 & 38 \\
+Moderate & 0.397 & 0.688 & 0.201 & 0.101 & 69 \\
+Severe & 0.422 & 0.687 & 0.213 & 0.072 & 30 \\
+Fatal & 0.333 & 0.679 & 0.350 & 0.125 & 4 \\
+N/a & 0.000 & 0.647 & 0.422 & 0.370 & 9 \\
+\bottomrule
+\end{tabular}
+
+
+% Table IVb — Cross-Model tIoU by Severity
+\begin{tabular}{lccc}
+\toprule
+Severity & CrashLogic-7B (Greedy) & CrashLogic-7B + SEASON & Zero-shot Qwen2.5-VL-7B \\
+\midrule
+Minor & 0.425 & 0.390 & 0.023 \\
+Moderate & 0.351 & 0.397 & 0.009 \\
+Severe & 0.472 & 0.422 & 0.013 \\
+Fatal & 0.333 & 0.333 & 0.000 \\
+\bottomrule
+\end{tabular}
+
+
+% Table V — Relative Gains over Zero-shot
+\begin{tabular}{lccccccccc}
+\toprule
+Method & BLEU-4 & ROUGE-L & METEOR & CIDEr & BERTScore & tIoU & THR@0.50 & ArgusCost-H & ArgusCost-O \\
+\midrule
+CrashLogic-7B (Greedy) & +812.6% & +109.8% & +83.0% & +50.5% & +41.1% & +2890.8% & +3200.0% & +2.1% & +76.9% \\
+CrashLogic-7B + SEASON & +800.1% & +111.4% & +80.0% & +50.3% & +40.6% & +2908.6% & +3100.0% & +0.0% & +75.7% \\
+\bottomrule
+\end{tabular}
+
+
+% Table VI — SEASON Ablation
+\begin{tabular}{lccccc}
+\toprule
+Variant & tIoU & BERTScore & ArgusCost-H & ArgusCost-O & ROUGE-L \\
+\midrule
+CrashLogic-7B (Greedy) & 0.373 & 0.686 & 0.223 & 0.107 & 0.336 \\
+CrashLogic-7B + SEASON & 0.375 & 0.684 & 0.227 & 0.112 & 0.338 \\
+CrashLogic-7B + SEASON (Full) & 0.357 & 0.685 & 0.240 & 0.119 & 0.332 \\
+SEASON ($\alpha$=0.5) & 0.394 & 0.686 & 0.212 & 0.102 & 0.339 \\
+SEASON ($\alpha$=1.5) & 0.354 & 0.681 & 0.249 & 0.124 & 0.327 \\
+SEASON ($\alpha$=2.0) & 0.356 & 0.676 & 0.253 & 0.128 & 0.319 \\
+SEASON (shuffle neg.) & 0.395 & 0.688 & 0.233 & 0.114 & 0.340 \\
+\bottomrule
+\end{tabular}
+

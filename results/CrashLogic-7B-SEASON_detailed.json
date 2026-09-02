@@ -1,0 +1,22 @@
+{
+  "metrics": {
+    "BLEU-4": 0.14048217346664366,
+    "ROUGE-L": 0.33816699403956346,
+    "METEOR": 0.36494178088381074,
+    "CIDEr": 0.507373194537184,
+    "BERTScore": 0.6839980483055115,
+    "tIoU": 0.375,
+    "ArgusCost-H": 0.22733333333333333,
+    "ArgusCost-O": 0.11222222222222221,
+    "Explanation-BERTScore": 0.6839981218179066,
+    "NLI-Entailment": 0.2759371899695058,
+    "NLI-Contradiction": 0.1856424063758459,
+    "NLI-Score": 0.09029478359365992,
+    "NLI-Loss": 2.9540859192268303,
+    "Full-NLI-Entailment": 0.3861909697693773,
+    "Full-NLI-Contradiction": 0.1492039637391766,
+    "Full-NLI-Score": 0.23698700603020068,
+    "Full-NLI-Loss": 2.074780298173428
+  },
+  "n_samples": 150
+}

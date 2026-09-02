@@ -1,0 +1,17 @@
+{
+  "model_id": "Qwen/Qwen2.5-VL-7B-Instruct",
+  "train_jsonl": "crashx/data/splits/train.jsonl",
+  "val_jsonl": "crashx/data/splits/val.jsonl",
+  "output_dir": "outputs/crashlogic_7b_lora",
+  "epochs": 5,
+  "batch_size": 1,
+  "grad_accum": 8,
+  "lr": 0.0002,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "num_frames": 8,
+  "max_side": 224,
+  "max_seq_len": 768,
+  "num_workers": 0
+}
