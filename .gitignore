@@ -25,6 +25,13 @@ outputs/crashlogic_7b_lora/tokenizer.json
 .cache/
 *.log.nohup
 
+# Runtime logs / PIDs
+results/logs/
+*.pid
+
+# Incomplete / aborted 16-frame retrain (not used in explanation paper)
+outputs/crashlogic_7b_lora_f16/
+
 # OS
 .DS_Store
 Thumbs.db

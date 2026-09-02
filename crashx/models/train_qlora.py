@@ -280,11 +280,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--max-side", type=int, default=224, help="Max longer video frame side in pixels")
     p.add_argument("--max-seq-len", type=int, default=768, help="Truncate tokenized training sequences")
     p.add_argument("--num-workers", type=int, default=0)
+    p.add_argument("--seed", type=int, default=42, help="Global training seed for reproducibility")
     return p.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> None:
     args = parse_args(argv)
+    import random
+
+    random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
     if not torch.cuda.is_available():
         logger.warning("CUDA not available — QLoRA 7B training will likely fail or be extremely slow.")
     train(args)

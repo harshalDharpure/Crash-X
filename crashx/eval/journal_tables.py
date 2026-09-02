@@ -20,6 +20,7 @@ from crashx.eval.argus_eval import (
     extract_predicted_claims,
 )
 from crashx.eval.nli_eval import NLIScorer, evaluate_nli
+from crashx.eval.bootstrap_stats import bootstrap_ci, paired_wilcoxon
 from crashx.eval.metrics import (
     bertscore_f1,
     bleu4_score,
@@ -31,19 +32,53 @@ from crashx.eval.metrics import (
     rouge_l_score,
     temporal_iou,
 )
+from crashx.eval.per_sample_scores import align_paired_vectors, extract_per_sample_vectors
 
-# Display names for paper tables
+# Display names for paper tables (Option A: Benchmark + Diagnostic Framework)
 MODEL_LABELS = {
     "ZeroShot-Qwen2.5-VL-7B": "Zero-shot Qwen2.5-VL-7B",
+    "ZeroShot-Qwen2.5-VL-3B": "Zero-shot Qwen2.5-VL-3B",
+    "ZeroShot-Qwen2-VL-2B": "Zero-shot Qwen2-VL-2B",
+    "ZeroShot-InternVL2.5-8B": "Zero-shot InternVL2-8B (disabled)",
+    "ZeroShot-LLaVA-Video-7B": "Zero-shot LLaVA-NeXT-Video-7B",
+    "ZeroShot-GPT-4o": "Zero-shot GPT-4o",
+    "ZeroShot-Gemini-1.5-Pro": "Zero-shot Gemini-1.5-Pro",
     "CrashLogic-7B-Greedy": "CrashLogic-7B (Greedy)",
-    "CrashLogic-7B-SEASON": "CrashLogic-7B + SEASON",
+    "CrashLogic-7B-Greedy-f16": "CrashLogic-7B (Greedy, 16f)",
+    "CrashLogic-7B-SEASON": "CrashLogic-7B + SEASON ($\\alpha$=1.0)",
+    "CrashLogic-7B-SEASON-a0.5": "CrashLogic-7B + TCD ($\\alpha$=0.5)",
+    "CrashLogic-7B-SEASON-a0.5-f16": "CrashLogic-7B + TCD ($\\alpha$=0.5, 16f)",
     "CrashLogic-7B-SEASON-Full": "CrashLogic-7B + SEASON (Full)",
-    "CrashLogic-7B-SEASON-a0.5": "SEASON ($\\alpha$=0.5)",
     "CrashLogic-7B-SEASON-a1.0": "SEASON ($\\alpha$=1.0)",
     "CrashLogic-7B-SEASON-a1.5": "SEASON ($\\alpha$=1.5)",
     "CrashLogic-7B-SEASON-a2.0": "SEASON ($\\alpha$=2.0)",
     "CrashLogic-7B-SEASON-shuffle": "SEASON (shuffle neg.)",
 }
+
+# Option A primary table order: foundation failures → adapted reference baselines
+FOUNDATION_CONDITIONS = [
+    "ZeroShot-Qwen2.5-VL-7B",
+    "ZeroShot-Qwen2.5-VL-3B",
+    "ZeroShot-Qwen2-VL-2B",
+    "ZeroShot-LLaVA-Video-7B",
+    "ZeroShot-GPT-4o",
+    "ZeroShot-Gemini-1.5-Pro",
+]
+
+ADAPTED_CONDITIONS = [
+    "CrashLogic-7B-Greedy",
+    "CrashLogic-7B-SEASON-a0.5",
+    "CrashLogic-7B-Greedy-f16",
+    "CrashLogic-7B-SEASON-a0.5-f16",
+]
+
+PRIMARY_CONDITIONS = FOUNDATION_CONDITIONS + ADAPTED_CONDITIONS
+
+BOOTSTRAP_METRICS = ["tIoU", "ArgusCost-O", "ArgusCost-H", "BLEU-4", "ROUGE-L", "Severity-Acc"]
+SIGNIFICANCE_PAIRS = [
+    ("CrashLogic-7B-Greedy", "CrashLogic-7B-SEASON-a0.5"),
+    ("ZeroShot-Qwen2.5-VL-7B", "CrashLogic-7B-SEASON-a0.5"),
+]
 
 
 def _label(name: str) -> str:
@@ -392,13 +427,13 @@ def table7_nli_faithfulness(all_metrics: dict[str, dict[str, float]]) -> dict[st
     ]
     headers = ["Method"] + [c.replace("-", " ") for c in cols]
     rows = []
-    for name, m in all_metrics.items():
-        if name not in {
-            "ZeroShot-Qwen2.5-VL-7B",
-            "CrashLogic-7B-Greedy",
-            "CrashLogic-7B-SEASON",
-        }:
-            continue
+    nli_order = [
+        c
+        for c in PRIMARY_CONDITIONS
+        if c in all_metrics and "NLI-Entailment" in all_metrics[c]
+    ]
+    for name in nli_order:
+        m = all_metrics[name]
         rows.append([_label(name)] + [f"{m.get(c, 0):.3f}" for c in cols])
     note = (
         "_Table VII: NLI faithfulness via cross-encoder/nli-deberta-v3-small. "
@@ -412,7 +447,140 @@ def table7_nli_faithfulness(all_metrics: dict[str, dict[str, float]]) -> dict[st
     }
 
 
+def table8_bootstrap_ci(
+    outputs_cache: dict[str, list[dict[str, Any]]],
+    conditions: Sequence[str],
+    n_bootstrap: int = 1000,
+) -> dict[str, str]:
+    """Table VIII: Bootstrap 95% CIs on key forensic metrics."""
+    headers = ["Method", "Metric", "Mean", "95% CI"]
+    rows: list[list[str]] = []
+    ci_report: dict[str, dict[str, dict[str, float]]] = {}
+
+    for cond in conditions:
+        if cond not in outputs_cache:
+            continue
+        vectors = extract_per_sample_vectors(outputs_cache[cond])
+        ci_report[cond] = {}
+        for metric in BOOTSTRAP_METRICS:
+            if metric not in vectors:
+                continue
+            res = bootstrap_ci(vectors[metric], n_bootstrap=n_bootstrap)
+            ci_report[cond][metric] = {
+                "mean": res.mean,
+                "ci_low": res.ci_low,
+                "ci_high": res.ci_high,
+            }
+            rows.append(
+                [
+                    _label(cond),
+                    metric,
+                    f"{res.mean:.3f}",
+                    f"[{res.ci_low:.3f}, {res.ci_high:.3f}]",
+                ]
+            )
+
+    note = (
+        f"_Table VIII: Bootstrap 95% confidence intervals ($N={n_bootstrap}$ resamples) "
+        "on per-video scores. Primary forensic metrics for Option A benchmark paper._"
+    )
+    return {
+        "title": "Table VIII — Bootstrap 95% Confidence Intervals",
+        "markdown": _md_table(headers, rows) + "\n\n" + note,
+        "latex": _latex_table(headers, rows, col_spec="l l c c"),
+        "ci_data": ci_report,
+    }
+
+
+def table9_significance_tests(
+    outputs_cache: dict[str, list[dict[str, Any]]],
+    pairs: Sequence[tuple[str, str]] | None = None,
+) -> dict[str, str]:
+    """Table IX: Paired Wilcoxon tests between key conditions."""
+    pairs = list(pairs or SIGNIFICANCE_PAIRS)
+    headers = ["Comparison", "Metric", "Wilcoxon $p$", "Significant ($p<0.05$)"]
+    rows: list[list[str]] = []
+    sig_data: list[dict[str, Any]] = []
+
+    for cond_a, cond_b in pairs:
+        if cond_a not in outputs_cache or cond_b not in outputs_cache:
+            continue
+        va = extract_per_sample_vectors(outputs_cache[cond_a])
+        vb = extract_per_sample_vectors(outputs_cache[cond_b])
+        va, vb = align_paired_vectors(va, vb)
+
+        for metric in ["tIoU", "ArgusCost-O", "BLEU-4", "Severity-Acc"]:
+            if metric in ("tIoU", "BLEU-4", "Severity-Acc"):
+                alt = "less"  # test cond_a < cond_b → cond_b better
+            else:
+                alt = "greater"  # test cond_a > cond_b → cond_b lower/better
+            test = paired_wilcoxon(va[metric], vb[metric], alternative=alt)
+            rows.append(
+                [
+                    f"{_label(cond_a)} vs {_label(cond_b)}",
+                    metric,
+                    test.format_p(),
+                    "Yes" if test.significant else "No",
+                ]
+            )
+            sig_data.append(
+                {
+                    "a": cond_a,
+                    "b": cond_b,
+                    "metric": metric,
+                    "p_value": test.p_value,
+                    "significant": test.significant,
+                }
+            )
+
+    note = (
+        "_Table IX: Paired Wilcoxon signed-rank tests on aligned per-video scores. "
+        "One-sided tests: higher tIoU/BLEU/Severity-Acc and lower ArgusCost-O are better._"
+    )
+    return {
+        "title": "Table IX — Paired Significance Tests",
+        "markdown": _md_table(headers, rows) + "\n\n" + note,
+        "latex": _latex_table(headers, rows, col_spec="l l c c"),
+        "significance_data": sig_data,
+    }
+
+
+def table0_foundation_benchmark(
+    all_metrics: dict[str, dict[str, float]],
+    conditions: Sequence[str],
+) -> dict[str, str]:
+    """Table 0: Main foundation-model benchmark (Option A headline table)."""
+    cols = ["tIoU", "ArgusCost-O", "ArgusCost-H", "Severity-Acc", "Timestamp-ParseRate", "BLEU-4"]
+    headers = ["Method"] + cols
+    rows = []
+    for name in conditions:
+        if name not in all_metrics:
+            continue
+        m = all_metrics[name]
+        rows.append([_label(name)] + [f"{m.get(c, 0):.3f}" for c in cols])
+    note = (
+        "_Table 0: CrashX foundation-model benchmark on 150-video CCD test split. "
+        "Foundation VLMs (zero-shot) vs domain-adapted CrashLogic reference baselines. "
+        "TCD = Task-Adapted Temporal Contrastive Decoding ($\\alpha$=0.5)._"
+    )
+    return {
+        "title": "Table 0 — Foundation Model Benchmark (Option A)",
+        "markdown": _md_table(headers, rows) + "\n\n" + note,
+        "latex": _latex_table(headers, rows),
+    }
+
+
+def select_primary_conditions(
+    all_metrics: dict[str, dict[str, float]],
+    conditions: Sequence[str] | None = None,
+) -> list[str]:
+    """Return available primary conditions in canonical order."""
+    order = list(conditions or PRIMARY_CONDITIONS)
+    return [c for c in order if c in all_metrics]
+
+
 TABLE_ORDER = [
+    "table0_foundation_benchmark",
     "table1_main_captioning",
     "table2_temporal_forensic",
     "table3_structured_fields",
@@ -421,13 +589,16 @@ TABLE_ORDER = [
     "table5_relative_gains",
     "table6_season_ablation",
     "table7_nli_faithfulness",
+    "table8_bootstrap_ci",
+    "table9_significance_tests",
 ]
 
 
 def generate_all_tables(
     results_dir: Path,
     conditions: Sequence[str] | None = None,
-    severity_condition: str = "CrashLogic-7B-SEASON",
+    severity_condition: str = "CrashLogic-7B-SEASON-a0.5",
+    n_bootstrap: int = 1000,
 ) -> dict[str, Any]:
     """Build all journal tables from prediction JSON files."""
     results_dir = Path(results_dir)
@@ -445,20 +616,24 @@ def generate_all_tables(
         all_metrics[cond] = m
     nli_scorer.unload()
 
-    # Primary 3-way comparison (exclude ablation variants from main tables)
-    primary = [
-        c
-        for c in conditions
-        if c
-        in {
-            "ZeroShot-Qwen2.5-VL-7B",
-            "CrashLogic-7B-Greedy",
-            "CrashLogic-7B-SEASON",
-        }
-    ]
-    primary_metrics = {c: all_metrics[c] for c in primary if c in all_metrics}
+    # Option A primary: foundation baselines + adapted reference (TCD α=0.5)
+    primary = select_primary_conditions(all_metrics, PRIMARY_CONDITIONS)
+    if len(primary) < 2:
+        primary = select_primary_conditions(
+            all_metrics,
+            [
+                "ZeroShot-Qwen2.5-VL-7B",
+                "CrashLogic-7B-Greedy",
+                "CrashLogic-7B-SEASON-a0.5",
+            ],
+        )
+    primary_metrics = {c: all_metrics[c] for c in primary}
 
     tables: dict[str, dict[str, str]] = {}
+    if primary_metrics:
+        tables["table0_foundation_benchmark"] = table0_foundation_benchmark(
+            all_metrics, primary
+        )
     tables["table1_main_captioning"] = table1_main_captioning(primary_metrics)
     tables["table2_temporal_forensic"] = table2_temporal_forensic(primary_metrics)
     tables["table3_structured_fields"] = table3_structured_fields(primary_metrics)
@@ -490,9 +665,16 @@ def generate_all_tables(
             {c: all_metrics[c] for c in ablation_keys}
         )
 
+    if primary:
+        tables["table8_bootstrap_ci"] = table8_bootstrap_ci(
+            outputs_cache, primary, n_bootstrap=n_bootstrap
+        )
+        tables["table9_significance_tests"] = table9_significance_tests(outputs_cache)
+
     return {
         "metrics": all_metrics,
         "tables": tables,
+        "primary_conditions": primary,
     }
 
 
@@ -520,3 +702,13 @@ def write_tables(report: dict[str, Any], out_dir: Path) -> None:
 
     with (out_dir / "full_metrics.json").open("w", encoding="utf-8") as f:
         json.dump(report["metrics"], f, indent=2)
+
+    stats_payload = {
+        "primary_conditions": report.get("primary_conditions", []),
+        "bootstrap_ci": report["tables"].get("table8_bootstrap_ci", {}).get("ci_data", {}),
+        "significance": report["tables"].get("table9_significance_tests", {}).get(
+            "significance_data", []
+        ),
+    }
+    with (out_dir / "statistical_analysis.json").open("w", encoding="utf-8") as f:
+        json.dump(stats_payload, f, indent=2)

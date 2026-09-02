@@ -66,7 +66,7 @@ class VRUBaselineModel:
 
     def load(self) -> "VRUBaselineModel":
         """Load processor + model (optionally with 4-bit quant and LoRA adapters)."""
-        from transformers import AutoProcessor, BitsAndBytesConfig, Qwen2_5_VLForConditionalGeneration
+        from transformers import AutoProcessor, BitsAndBytesConfig
 
         logger.info("Loading processor from %s", self.model_id)
         self.processor = AutoProcessor.from_pretrained(
@@ -83,8 +83,18 @@ class VRUBaselineModel:
                 bnb_4bit_compute_dtype=self.torch_dtype,
             )
 
+        model_id_lower = self.model_id.lower()
+        if "qwen2-vl" in model_id_lower and "2.5" not in model_id_lower:
+            from transformers import Qwen2VLForConditionalGeneration
+
+            model_cls = Qwen2VLForConditionalGeneration
+        else:
+            from transformers import Qwen2_5_VLForConditionalGeneration
+
+            model_cls = Qwen2_5_VLForConditionalGeneration
+
         logger.info("Loading model %s (4bit=%s)", self.model_id, self.load_in_4bit)
-        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+        self.model = model_cls.from_pretrained(
             self.model_id,
             quantization_config=quant_config,
             device_map=self.device_map,

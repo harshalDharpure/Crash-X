@@ -170,6 +170,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Re-run ablations even if predictions already exist",
     )
+    p.add_argument(
+        "--n-bootstrap",
+        type=int,
+        default=1000,
+        help="Bootstrap resamples for Table VIII CIs",
+    )
     return p.parse_args(argv)
 
 
@@ -212,7 +218,7 @@ def main(argv: list[str] | None = None) -> None:
         args.tables_only = True
 
     logger.info("Generating journal tables → %s", args.tables_dir)
-    report = generate_all_tables(args.results_dir)
+    report = generate_all_tables(args.results_dir, n_bootstrap=args.n_bootstrap)
     write_tables(report, args.tables_dir)
 
     for key, tbl in report["tables"].items():

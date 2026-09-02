@@ -1,0 +1,11 @@
+## Table E5 — Gains over Zero-shot (Explanation)
+
+| Method | $\Delta$ BLEU-4 | $\Delta$ ROUGE-L | $\Delta$ BERTScore | $\Delta$ NLI-Score | $\Delta$ tIoU |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| Zero-shot Qwen2.5-VL-3B | +22.9% | +12.2% | +6.6% | +89.2% | -22.8% |
+| Zero-shot Qwen2-VL-2B | +16.3% | -24.9% | -14.0% | -114.4% | -100.0% |
+| Zero-shot LLaVA-NeXT-Video-7B | +64.4% | +23.1% | +12.4% | +104.6% | +91.7% |
+| CrashLogic-7B (Greedy) | +812.6% | +109.8% | +41.1% | -110.8% | +2890.8% |
+| CrashLogic-7B + TCD ($\alpha$=0.5) | +808.0% | +111.8% | +41.0% | +20.2% | +3060.1% |
+
+_Table E5: Relative change vs zero-shot Qwen2.5-VL-7B on explanation / faithfulness metrics._

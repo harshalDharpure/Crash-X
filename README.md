@@ -60,7 +60,9 @@ python -m crashx.run_journal_experiments --tables-only
 | CrashLogic-7B (Greedy) | **0.142** | 0.373 | **0.107** | -0.005 |
 | CrashLogic-7B + SEASON | 0.140 | 0.375 | 0.112 | **0.090** |
 
-Full documentation: [`results/paper/00_INDEX.md`](results/paper/00_INDEX.md)
+**Main paper tables (explanation-only):** [`results/tables/explanation/all_explanation_tables.md`](results/tables/explanation/all_explanation_tables.md)
+
+Full documentation: [`results/paper/00_INDEX.md`](results/paper/00_INDEX.md) · Narrative: [`results/paper/15_EXPLANATION_ONLY_PAPER.md`](results/paper/15_EXPLANATION_ONLY_PAPER.md)
 
 ---
 

@@ -7,5 +7,20 @@
   "tIoU": 0.35444444444444445,
   "ArgusCost-H": 0.24855555555555553,
   "ArgusCost-O": 0.12444444444444443,
-  "Explanation-BERTScore": 0.680578086177508
+  "Explanation-BERTScore": 0.680578086177508,
+  "NLI-Entailment": 0.2084278268377481,
+  "NLI-Contradiction": 0.2306191511322201,
+  "NLI-Score": -0.022191324294471997,
+  "NLI-Loss": 3.3793426477039854,
+  "Full-NLI-Entailment": 0.4103524853871204,
+  "Full-NLI-Contradiction": 0.18757784921481896,
+  "Full-NLI-Score": 0.22277463617230145,
+  "Full-NLI-Loss": 2.1846904143318535,
+  "Severity-Acc": 0.4266666666666667,
+  "Impact-Jaccard": 0.47865079365079366,
+  "Vehicle-Jaccard": 0.5011851851851852,
+  "Weather-Jaccard": 0.8733333333333333,
+  "Timestamp-ParseRate": 1.0,
+  "THR@0.25": 0.5466666666666666,
+  "THR@0.50": 0.4
 }

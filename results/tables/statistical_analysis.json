@@ -1,0 +1,262 @@
+{
+  "primary_conditions": [
+    "ZeroShot-Qwen2.5-VL-7B",
+    "ZeroShot-Qwen2.5-VL-3B",
+    "ZeroShot-Qwen2-VL-2B",
+    "ZeroShot-LLaVA-Video-7B",
+    "CrashLogic-7B-Greedy",
+    "CrashLogic-7B-SEASON-a0.5"
+  ],
+  "bootstrap_ci": {
+    "ZeroShot-Qwen2.5-VL-7B": {
+      "tIoU": {
+        "mean": 0.012464321873004579,
+        "ci_low": 0.00048396388495946895,
+        "ci_high": 0.028043821750652443
+      },
+      "ArgusCost-O": {
+        "mean": 0.4622222222222223,
+        "ci_low": 0.4377777777777777,
+        "ci_high": 0.4855555555555555
+      },
+      "ArgusCost-H": {
+        "mean": 0.2274444444444444,
+        "ci_low": 0.1887722222222222,
+        "ci_high": 0.26668888888888886
+      },
+      "BLEU-4": {
+        "mean": 0.015235759152132525,
+        "ci_low": 0.013356629369591975,
+        "ci_high": 0.0172024115600303
+      },
+      "ROUGE-L": {
+        "mean": 0.1599702896989634,
+        "ci_low": 0.15076840085623253,
+        "ci_high": 0.16814010357554535
+      },
+      "Severity-Acc": {
+        "mean": 0.08,
+        "ci_low": 0.04,
+        "ci_high": 0.12666666666666668
+      }
+    },
+    "ZeroShot-Qwen2.5-VL-3B": {
+      "tIoU": {
+        "mean": 0.00962717975619508,
+        "ci_low": 0.0033614761671975214,
+        "ci_high": 0.01721959751303423
+      },
+      "ArgusCost-O": {
+        "mean": 0.41333333333333333,
+        "ci_low": 0.3933055555555555,
+        "ci_high": 0.43444444444444436
+      },
+      "ArgusCost-H": {
+        "mean": 0.28477777777777774,
+        "ci_low": 0.24632777777777776,
+        "ci_high": 0.32511666666666666
+      },
+      "BLEU-4": {
+        "mean": 0.019080094290825057,
+        "ci_low": 0.016986083490340066,
+        "ci_high": 0.0210486181527805
+      },
+      "ROUGE-L": {
+        "mean": 0.17954396808207562,
+        "ci_low": 0.17261957243455026,
+        "ci_high": 0.18578452058592176
+      },
+      "Severity-Acc": {
+        "mean": 0.18666666666666668,
+        "ci_low": 0.12,
+        "ci_high": 0.25333333333333335
+      }
+    },
+    "ZeroShot-Qwen2-VL-2B": {
+      "tIoU": {
+        "mean": 3.3151002817835236e-06,
+        "ci_low": 0.0,
+        "ci_high": 9.94530084535057e-06
+      },
+      "ArgusCost-O": {
+        "mean": 0.6066666666666667,
+        "ci_low": 0.57,
+        "ci_high": 0.6433333333333333
+      },
+      "ArgusCost-H": {
+        "mean": 0.5637777777777777,
+        "ci_low": 0.4998583333333333,
+        "ci_high": 0.6326722222222223
+      },
+      "BLEU-4": {
+        "mean": 0.013560181470372268,
+        "ci_low": 0.010853009476741091,
+        "ci_high": 0.01645720942800427
+      },
+      "ROUGE-L": {
+        "mean": 0.1200996975394732,
+        "ci_low": 0.10607236160900367,
+        "ci_high": 0.1342272456119154
+      },
+      "Severity-Acc": {
+        "mean": 0.08666666666666667,
+        "ci_low": 0.04666666666666667,
+        "ci_high": 0.13333333333333333
+      }
+    },
+    "ZeroShot-LLaVA-Video-7B": {
+      "tIoU": {
+        "mean": 0.023898945147983325,
+        "ci_low": 0.007043830786727677,
+        "ci_high": 0.04689070147713436
+      },
+      "ArgusCost-O": {
+        "mean": 0.3344444444444445,
+        "ci_low": 0.3144444444444444,
+        "ci_high": 0.35444444444444445
+      },
+      "ArgusCost-H": {
+        "mean": 0.4013333333333334,
+        "ci_low": 0.37188055555555555,
+        "ci_high": 0.43234444444444436
+      },
+      "BLEU-4": {
+        "mean": 0.025926486791627894,
+        "ci_low": 0.023649433088627207,
+        "ci_high": 0.028288531296709205
+      },
+      "ROUGE-L": {
+        "mean": 0.19698558518681583,
+        "ci_low": 0.1912114835964027,
+        "ci_high": 0.20248960362395896
+      },
+      "Severity-Acc": {
+        "mean": 0.3466666666666667,
+        "ci_low": 0.2733333333333333,
+        "ci_high": 0.4266666666666667
+      }
+    },
+    "CrashLogic-7B-Greedy": {
+      "tIoU": {
+        "mean": 0.3727777777777778,
+        "ci_low": 0.3144305555555555,
+        "ci_high": 0.4344583333333332
+      },
+      "ArgusCost-O": {
+        "mean": 0.10666666666666666,
+        "ci_low": 0.08777777777777779,
+        "ci_high": 0.12555555555555556
+      },
+      "ArgusCost-H": {
+        "mean": 0.2226666666666666,
+        "ci_low": 0.2,
+        "ci_high": 0.24799999999999997
+      },
+      "BLEU-4": {
+        "mean": 0.12288927568347718,
+        "ci_low": 0.11290802155721509,
+        "ci_high": 0.1327178710974091
+      },
+      "ROUGE-L": {
+        "mean": 0.33560990513371847,
+        "ci_low": 0.32519017961931035,
+        "ci_high": 0.3465898599395453
+      },
+      "Severity-Acc": {
+        "mean": 0.46,
+        "ci_low": 0.3865000000000001,
+        "ci_high": 0.54
+      }
+    },
+    "CrashLogic-7B-SEASON-a0.5": {
+      "tIoU": {
+        "mean": 0.3938888888888889,
+        "ci_low": 0.3327777777777778,
+        "ci_high": 0.4567222222222222
+      },
+      "ArgusCost-O": {
+        "mean": 0.10222222222222221,
+        "ci_low": 0.08333333333333333,
+        "ci_high": 0.12333333333333334
+      },
+      "ArgusCost-H": {
+        "mean": 0.21199999999999994,
+        "ci_low": 0.188,
+        "ci_high": 0.23866666666666664
+      },
+      "BLEU-4": {
+        "mean": 0.1230633949436886,
+        "ci_low": 0.11436648497207785,
+        "ci_high": 0.1317179498486872
+      },
+      "ROUGE-L": {
+        "mean": 0.3387727262321257,
+        "ci_low": 0.3294606759938286,
+        "ci_high": 0.34736050085323467
+      },
+      "Severity-Acc": {
+        "mean": 0.4866666666666667,
+        "ci_low": 0.4,
+        "ci_high": 0.5666666666666667
+      }
+    }
+  },
+  "significance": [
+    {
+      "a": "CrashLogic-7B-Greedy",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "tIoU",
+      "p_value": 0.2887382075928378,
+      "significant": false
+    },
+    {
+      "a": "CrashLogic-7B-Greedy",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "ArgusCost-O",
+      "p_value": 0.23975006109347669,
+      "significant": false
+    },
+    {
+      "a": "CrashLogic-7B-Greedy",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "BLEU-4",
+      "p_value": 0.22170613175522857,
+      "significant": false
+    },
+    {
+      "a": "CrashLogic-7B-Greedy",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "Severity-Acc",
+      "p_value": 0.1029516053660342,
+      "significant": false
+    },
+    {
+      "a": "ZeroShot-Qwen2.5-VL-7B",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "tIoU",
+      "p_value": 9.117038917722111e-17,
+      "significant": true
+    },
+    {
+      "a": "ZeroShot-Qwen2.5-VL-7B",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "ArgusCost-O",
+      "p_value": 2.588010902021956e-25,
+      "significant": true
+    },
+    {
+      "a": "ZeroShot-Qwen2.5-VL-7B",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "BLEU-4",
+      "p_value": 1.3234673746350863e-26,
+      "significant": true
+    },
+    {
+      "a": "ZeroShot-Qwen2.5-VL-7B",
+      "b": "CrashLogic-7B-SEASON-a0.5",
+      "metric": "Severity-Acc",
+      "p_value": 1.0401089798181329e-13,
+      "significant": true
+    }
+  ]
+}
