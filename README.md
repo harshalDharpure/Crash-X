@@ -1,4 +1,4 @@
-# CrashX
+# Crash-X (CrashX)
 
 **CrashX: Benchmarking Spatiotemporal Reasoning and Mitigating Temporal Hallucinations in Traffic Accident Video-LLMs**
 
