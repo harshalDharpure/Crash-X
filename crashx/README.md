@@ -1,8 +1,10 @@
-# CrashX: Spatiotemporal Reasoning & Temporal Hallucination Mitigation for Traffic Accident Video-LLMs
+# CrashX Python package
 
-Research pipeline for **"CrashX: Benchmarking Spatiotemporal Reasoning and Mitigating Temporal Hallucinations in Traffic Accident Video-LLMs"**.
+Package for **CrashX**: fine-tuning and evaluating Video-LLMs for traffic accident explanation on CCD.
 
-This codebase adapts the [VRU-Accident](https://github.com/Kimyounggun99/VRU-Accident) evaluation pattern for dense crash captioning, fine-tunes **Qwen2.5-VL-7B-Instruct** with 4-bit QLoRA on the Car Crash Dataset (CCD), applies **SEASON**-style contrastive decoding at inference, and scores outputs with lexical metrics + CrashX-adapted **ARGUS** dual costs.
+See the repository root [`README.md`](../README.md) and [`GUIDE_PRESENTATION_BRIEFING.md`](../GUIDE_PRESENTATION_BRIEFING.md) for the current paper claims (omission vs hallucination, temporal prior, TCD paired tests).
+
+This package adapts the [VRU-Accident](https://github.com/Kimyounggun99/VRU-Accident) evaluation pattern for dense crash captioning, fine-tunes **Qwen2.5-VL-7B-Instruct** with 4-bit QLoRA (**CrashLogic-7B**), runs **TCD / SEASON**-style contrastive decoding, and scores outputs with lexical metrics + structured **ArgusCost-H / ArgusCost-O**.
 
 ## Directory layout
 

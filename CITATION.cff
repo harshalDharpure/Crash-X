@@ -1,0 +1,30 @@
+# Citation File Format — CrashX
+
+cff-version: 1.2.0
+title: "CrashX: Fine-Tuning and Evaluating Video Language Models for Traffic Accident Explanation"
+message: "If you use this software, evaluation protocol, or paper draft, please cite it as below."
+type: software
+authors:
+  - family-names: Dharpure
+    given-names: Harshal
+repository-code: "https://github.com/harshalDharpure/Crash-X"
+url: "https://github.com/harshalDharpure/Crash-X"
+abstract: >-
+  CrashX studies whether Video-LLMs can faithfully explain dashcam traffic
+  accidents on the Car Crash Dataset. Domain adaptation (CrashLogic-7B) reduces
+  omissions and improves lexical metrics but does not reduce hallucinations;
+  temporal localisation behaves like a dataset prior; mild temporal contrastive
+  decoding is not significant under paired tests.
+keywords:
+  - video-llm
+  - traffic accident
+  - hallucination
+  - omission
+  - faithfulness
+  - temporal grounding
+  - QLoRA
+  - contrastive decoding
+  - Car Crash Dataset
+license: MIT
+version: "0.2.0"
+date-released: "2026-09-04"

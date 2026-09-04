@@ -4,11 +4,28 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crashx"
-version = "0.1.0"
-description = "CrashX: spatiotemporal crash reasoning and SEASON temporal hallucination mitigation"
-readme = "crashx/README.md"
+version = "0.2.0"
+description = "CrashX: fine-tuning and evaluating Video-LLMs for faithful traffic accident explanation"
+readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "Harshal Dharpure" }
+]
+keywords = [
+  "video-llm",
+  "traffic-accident",
+  "hallucination",
+  "omission",
+  "qlora",
+  "faithfulness",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/harshalDharpure/Crash-X"
+Repository = "https://github.com/harshalDharpure/Crash-X"
+Documentation = "https://github.com/harshalDharpure/Crash-X/blob/main/GUIDE_PRESENTATION_BRIEFING.md"
 
 [tool.setuptools.packages.find]
 include = ["crashx*"]

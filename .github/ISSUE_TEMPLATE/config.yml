@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Guide presentation briefing
+    url: https://github.com/harshalDharpure/Crash-X/blob/main/GUIDE_PRESENTATION_BRIEFING.md
+    about: Full research walkthrough (metrics, tables, conclusions)
+  - name: IEEE paper package
+    url: https://github.com/harshalDharpure/Crash-X/tree/main/paper
+    about: Overleaf zip and LaTeX sources

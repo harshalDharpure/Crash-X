@@ -1,0 +1,36 @@
+name: Bug report
+about: Report a bug in CrashX training, inference, or evaluation
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an issue. Please fill in the sections below.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Expected vs actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Commands, hardware (GPU), and relevant paths
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Training (QLoRA)
+        - Inference / TCD / SEASON
+        - Evaluation metrics
+        - Paper / LaTeX
+        - Documentation
+        - Other
+    validations:
+      required: true
