@@ -1,0 +1,44 @@
+\begin{table*}[!t]
+\centering
+\caption{Qualitative comparison on three held-out test videos, one per finding. Explanations are lightly truncated; structured fields are the systems' own. Per-video ROUGE-L (R-L) against the reference Explanation is given for each output. \textcolor{red!70!black}{Red} marks a claim that contradicts the reference.}
+\label{tab:qualitative-full}
+\renewcommand{\arraystretch}{1.12}
+\scriptsize
+\begin{tabular}{@{}p{1.35cm}p{5.05cm}p{5.05cm}p{5.05cm}@{}}
+\toprule
+ & \textbf{Video 001227} --- \emph{adaptation recovers the narrative} & \textbf{Video 000104} --- \emph{adaptation hallucinates the agent} & \textbf{Video 000661} --- \emph{the collision prior} \\
+\midrule
+\textbf{Reference} &
+Curved two-lane road; a \emph{white car} approaches from the opposite direction; the camera car turns left to avoid it; front-left to front-left collision. Severity \code{moderate}; window $[3,4]$\,s.
+&
+Busy commercial road in daylight; a red bus passes; a slow \emph{black truck} ahead; the front of the camera car strikes the rear of the black truck. Severity \code{moderate}; window $[1,5]$\,s.
+&
+Busy highway; a white truck on the far right; a red car attempts to overtake it, ``but fortunately, \emph{no accidents took place}.'' Severity \code{n/a}; no window.
+\\
+\midrule
+\textbf{Zero-shot Qwen2.5-VL-7B} &
+``\#\#\# Analysis of the Car Crash Video --- Video Details: Date: 20/06/2014 --- Time: 17:25:23 --- Camera Perspective: \ldots'' No narrative reaches the crash. \textsc{No-Narrative}. R-L $0.00$.
+&
+``\ldots overcast weather conditions \ldots The road appears to be clear with no visible obstacles or hazards. Traffic seems'' (cut at 256 tokens). No collision described. \textsc{Fluent-Fabrication}. R-L $0.09$.
+&
+``\ldots At approximately 0:05 seconds \textcolor{red!70!black}{there is a sudden jolt forward, indicating a collision} \ldots the red sedan \ldots skidding \ldots \textcolor{red!70!black}{moderate to severe}.'' Fabricated crash. R-L $0.12$.
+\\
+\midrule
+\textbf{\crashlogic{} (greedy)} &
+Severity \textcolor{red!70!black}{severe} $|$ Start \textcolor{red!70!black}{2.0} End \textcolor{red!70!black}{3.0} $|$ Vehicles: White Car, Camera Car. ``\ldots a white car appeared from the opposite direction, speeding recklessly \ldots lost control \ldots impact between the front of the white car and the left side of the camera car.'' Agents and cause family match. R-L $0.45$, tIoU $0$.
+&
+Severity moderate $|$ Start 2.0 End 3.0 $|$ Vehicles: Camera Car, \textcolor{red!70!black}{Red Car}. ``\ldots the camera car followed closely behind a \textcolor{red!70!black}{red car} \ldots the red car abruptly applied its brakes \ldots the front of the camera car collided with the rear of the red car.'' Coherent rear-end story, wrong agent. \textsc{Wrong-Agent}. R-L $0.41$, tIoU $0.25$.
+&
+Severity \textcolor{red!70!black}{moderate} $|$ Start \textcolor{red!70!black}{2.0} End \textcolor{red!70!black}{3.0} $|$ Vehicles: White Truck, Red Car. ``\ldots the red car made a left turn without noticing the white truck. \textcolor{red!70!black}{As a result, the white truck collided with the rear left side of the red car} \ldots'' Fabricated collision with correct agents. R-L $0.28$.
+\\
+\midrule
+\textbf{\crashlogic{} + \tcd{}$_{0.5}$} &
+Severity \textcolor{red!70!black}{severe} $|$ Start \textcolor{red!70!black}{2.0} End \textcolor{red!70!black}{3.0} $|$ Vehicles: Camera Car, White Car. ``\ldots a white car approached from the opposite direction on the left side \ldots both vehicles attempted to cross the intersection, resulting in a collision between the front-left of the camera car and the front-right of the white car.'' R-L $0.50$, tIoU $0$.
+&
+Severity moderate $|$ Start 2.0 End 3.0 $|$ Vehicles: Camera Car, \textcolor{red!70!black}{Red Car}. ``\ldots several cars were parked, while a few pedestrians were walking \ldots As the camera car attempted to overtake the black car in front of it, it encountered a \textcolor{red!70!black}{red car} that had come to a stop \ldots'' Same wrong agent; new unsupported details. R-L $0.31$, tIoU $0.25$.
+&
+Severity \textcolor{red!70!black}{moderate} $|$ Start \textcolor{red!70!black}{2.0} End \textcolor{red!70!black}{3.0} $|$ Vehicles: \textcolor{red!70!black}{White Car}, Red Car. ``\ldots \textcolor{red!70!black}{a white car attempted to overtake the red car but unexpectedly collided with it}. The impact occurred between the front right of the white car and the rear left of the red car.'' Fabricated collision, agents altered. R-L $0.31$.
+\\
+\bottomrule
+\end{tabular}
+\end{table*}

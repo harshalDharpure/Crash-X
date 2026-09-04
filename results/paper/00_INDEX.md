@@ -23,6 +23,9 @@
 | 10 | [10_TABLE_VII_NLI.md](10_TABLE_VII_NLI.md) | Table VII — NLI faithfulness & hallucination |
 | 11 | [11_FULL_METRICS_MASTER.md](11_FULL_METRICS_MASTER.md) | All conditions × all metrics (detailed) |
 | 12 | [12_KEY_FINDINGS.md](12_KEY_FINDINGS.md) | Best results, paper narrative, reviewer talking points |
+| 15 | [15_EXPLANATION_ONLY_PAPER.md](15_EXPLANATION_ONLY_PAPER.md) | Advisor-aligned explanation-only scope |
+| 16 | [16_TITLE_ABSTRACT_CONTRIBUTIONS.md](16_TITLE_ABSTRACT_CONTRIBUTIONS.md) | Title, abstract, contributions draft |
+| Q | [qualitative/EXAMPLES.md](qualitative/EXAMPLES.md) | Qualitative explanation examples for figures |
 
 ---
 

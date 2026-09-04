@@ -1,0 +1,37 @@
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Video-LLMs and what their benchmarks measure.}
+Open Video-LLMs such as Qwen2-VL/Qwen2.5-VL~\cite{qwen2vl,qwen25vl} and LLaVA-NeXT-Video~\cite{llavanextvideo} score well on multiple-choice suites such as Video-MME~\cite{videomme} and MVBench~\cite{mvbench}.
+A recurring finding, however, is that these suites can be solved without using temporal order: single-frame models match multi-frame ones on several of them~\cite{buch2022revisiting,lei2023singleframe}, and shuffling frames barely changes accuracy~\cite{tvbench}.
+ARGUS~\cite{argus2025} shows the complementary gap: models that verify well hallucinate heavily when asked to \emph{generate}.
+Our setting is generation, our reference is a human forensic narrative, and we explicitly test for the order-insensitivity these works warn about by comparing against constant-window baselines and by measuring the correlation between predicted and true event times.
+
+\paragraph{Hallucination in multimodal LLMs.}
+Object hallucination in captioning was formalised by CHAIR~\cite{rohrbach2018chair} and POPE~\cite{pope}; HallusionBench~\cite{hallusionbench} extends it to entangled language priors and visual illusions.
+For video, VideoHallucer~\cite{videohallucer}, EventHallusion~\cite{eventhallusion}, TempCompass~\cite{tempcompass}, and VidHalluc~\cite{vidhalluc} probe intrinsic, event-level, and temporal-sequence hallucinations, largely through paired or adversarial questions.
+ARGUS~\cite{argus2025} is closest to our evaluation: it separates \emph{hallucination} (statements not entailed by the reference) from \emph{omission} (reference content missing from the output) for free-form captions using an LLM judge.
+We keep the dual-cost framing but instantiate it over CCD's structured fields so that it runs without API access and yields a per-field decomposition (Section~\ref{sec:fields}).
+The NLG literature has long argued that fluency and faithfulness diverge~\cite{maynez2020faithfulness,ji2023survey}; Gekhman~\emph{et al.}~\cite{gekhman2024finetuning} show that supervised fine-tuning on facts the model cannot ground increases hallucination in LLMs.
+Our omission/hallucination asymmetry (Section~\ref{sec:ho}) is the video-explanation analogue: adaptation teaches the model to \emph{always answer}, not to answer \emph{correctly}.
+
+\paragraph{Decode-time mitigation.}
+Contrastive decoding~\cite{li2023cd} sharpens a strong model's distribution against a weaker one.
+VCD~\cite{vcd} contrasts against a visually corrupted input; ICD~\cite{icd} against a perturbed instruction; M3ID~\cite{m3id} against the unconditioned language prior; OPERA~\cite{opera} penalises over-trust on summary tokens; DoLa~\cite{dola} contrasts layers.
+SEASON~\cite{season2025} brings this to video with temporally homogenised negatives and per-token self-diagnostic weights, reporting gains on VidHalluc, VideoHallucer, and EventHallusion.
+Our \tcd{} is SEASON's temporal branch with a reversed- or shuffled-frame negative and a scalar $\alpha$; we also evaluate the full SEASON recipe.
+Unlike prior reports, we evaluate with paired tests on a fixed test split and find no significant benefit on this task, and we explain the null result in terms of which cues the negative preserves (Section~\ref{sec:mechanism}).
+
+\paragraph{Temporal grounding in Video-LLMs.}
+TimeChat~\cite{timechat}, VTimeLLM~\cite{vtimellm}, and LITA~\cite{lita} give the language model explicit access to absolute time, via time-stamped frame tokens or dedicated time tokens, and show that this is necessary for moment localisation.
+Our temporal-prior finding (Section~\ref{sec:prior}) is consistent with theirs: a model fed frames without time stamps cannot emit calibrated timestamps, and a supervised objective that demands them is satisfied by the training marginal.
+
+\paragraph{Accident video understanding and driving VLMs.}
+Dashcam accident datasets---DAD~\cite{chan2016dad}, A3D~\cite{yao2019a3d}, DoTA~\cite{yao2022dota}, DADA-2000~\cite{fang2021dada}, CCD~\cite{bao2020nondeterministic}---were built for anticipation, detection, and attention prediction.
+MM-AU~\cite{fang2024mmau} adds abductive cause/effect text to ego-view accidents; VRU-Accident~\cite{vruaccident} evaluates 17 MLLMs on multiple-choice QA and dense captioning of vulnerable-road-user crashes and reports that models handle visible attributes far better than causes and preventability.
+Driving VLMs such as DriveLM~\cite{drivelm}, DriveGPT4~\cite{drivegpt4}, LingoQA~\cite{lingoqa}, DriveVLM~\cite{drivevlm}, and Dolphins~\cite{dolphins} target planning and QA on nominal driving rather than post-hoc collision explanation.
+None of these works separates omission from hallucination, tests temporal claims against a prior-only baseline, or evaluates decode-time hallucination mitigation; CrashX does all three on a fixed split with paired statistics.
+
+\paragraph{Faithfulness judges.}
+NLI cross-encoders are an established proxy for factual consistency in summarisation~\cite{kryscinski2020factcc,laban2022summac,zha2023alignscore}, and atomic-claim decomposition~\cite{min2023factscore} is the long-form analogue.
+We use a DeBERTa-v3~\cite{he2023debertav3} NLI cross-encoder as one of several signals and report its variance and its correlation with the structured hallucination cost, rather than treating it as ground truth.

@@ -1,0 +1,66 @@
+\section{Analysis: Where the Hallucinations Are}
+\label{sec:analysis}
+
+The aggregate costs in Table~\ref{tab:ho} say that adaptation does not reduce hallucination and that \tcd{} does not either.
+This section asks \emph{which} claims are wrong, tests the predictions of Section~\ref{sec:mechanism}, and shows two failure modes---a learned temporal prior and a collision prior---that aggregate metrics conceal.
+
+\subsection{Field-level decomposition}
+\label{sec:fields}
+
+Table~\ref{tab:fields} summarises the conflict rates that dominate \Hcost{}; the full matrix is Table~\ref{tab:fields-full}.
+
+\input{tables/tab_fields}
+
+\paragraph{Where adapted models are wrong.}
+For \crashlogic{} greedy, two fields carry almost all of \Hcost: the crash window conflicts on $42.7\%$ of videos and severity on $54.0\%$.
+Weather conflicts on $12.0\%$; impact side and vehicle type almost never (${\leq}2\%$).
+Under the strict colour-disjoint check---does the output name any vehicle colour that appears in the ground truth?---$21.3\%$ of crash videos receive a contradicting colour.
+Adaptation makes the model name colours far more often and only slightly more accurately, which is why the aggregate \Hcost{} is flat.
+
+\paragraph{P1 holds: \tcd{} does not touch order-invariant fields.}
+Colour-disjoint rates stay within $[20.6\%,29.8\%]$ across decoding variants; weather within $[11.3\%,13.3\%]$.
+Only $\alpha{\geq}1.5$ moves these rates, and it moves them \emph{up}.
+A reversed clip shows the same black car in the same rain; contrasting against it cannot make the model see a different colour.
+
+\paragraph{Severity is a labelling problem, not a perception problem.}
+The $54\%$ severity conflict rate means \crashlogic{} is correct on $46\%$ of videos---no better than a constant \code{moderate} predictor ($46.0\%$ of the test split).
+We include severity in \Hcost{} because the model asserts it as fact, but we do not read this rate as evidence of visual hallucination.
+
+\subsection{The temporal prior}
+\label{sec:prior}
+
+Figure~\ref{fig:prior} plots the distribution of ground-truth crash starts against the starts \crashlogic{} predicts.
+The ground truth spans $[0,5)$\,s with a mode at $2$\,s; the model's predictions occupy exactly two values.
+
+\input{figures/fig4_temporal_prior}
+
+Three facts establish that this is a prior rather than perception.
+First, the two emitted windows are the two most frequent training windows ($[3,4]$\,s: 314 clips; $[2,3]$\,s: 253 clips), and every emitted window is exactly one second long.
+Second, the predicted start is uncorrelated with the true start ($\rho{=}0.009$).
+Third, the constant window $[3,4]$\,s beats the model (Table~\ref{tab:e3}).
+The model has learned \emph{when crashes usually happen in CCD}, not \emph{when this crash happened}.
+
+Frames are supplied without absolute time (Section~\ref{sec:input}), so under Eq.~\eqref{eq:sft} the loss on \code{Start:}/\code{End:} tokens is minimised by the marginal.
+Time-aware Video-LLMs that inject time stamps or time tokens~\cite{timechat,vtimellm,lita} exist precisely because this shortcut is otherwise unavoidable.
+
+\paragraph{P2 holds: \tcd{} cannot fix a prior.}
+\tcd{} at $\alpha{=}0.5$ changes the emitted window on $29\%$ of videos---but only between $[2,3]$\,s and $[3,4]$\,s---fixing 16 window conflicts and introducing 12 (Table~\ref{tab:tcddiff}).
+No variant creates a third window or induces correlation with the true start ($\rho\leq0.03$).
+
+\subsection{The collision prior: fabricated crashes on no-crash videos}
+\label{sec:nocrash}
+
+Six test videos are near-misses whose ground truth states explicitly that no collision occurred.
+\crashlogic{} greedy fabricates a collision on 3 of 6 and hedges on the other 3; under \tcd{} at $\alpha{=}0.5$ and $1.0$ it fabricates on \textbf{6 of 6} (Table~\ref{tab:nocrash}).
+No system ever predicts severity \code{n/a}.
+Reversing a near-miss clip produces a sequence in which vehicles converge rather than diverge, so the contrast \emph{amplifies} collision-like continuations.
+The prompt itself (``analyze this car crash video'') presupposes a crash; we return to this in Section~\ref{sec:limitations}.
+
+\subsection{Error profile and what \tcd{} changes}
+\label{sec:taxonomy-results}
+\label{sec:tcd-changes}
+
+The automatic taxonomy (Table~\ref{tab:taxonomy}) shows the same asymmetry in codes: adaptation removes \textsc{No-Narrative} ($10.6\%\to0\%$) and \textsc{Under-Specific} ($40.4\%\to0\%$), while roughly doubling \textsc{Wrong-Agent} ($9.9\%\to21.3\%$) and \textsc{Wrong-Time} ($19.9\%\to39.0\%$).
+\tcd{} at $\alpha{=}0.5$ rewrites the free-text Explanation on every video (ROUGE-L to greedy $0.48$) while changing the vehicle set on only $39\%$ of videos and the severity on $10\%$ (Table~\ref{tab:tcddiff}): the structured fields where hallucination lives are largely inherited from greedy decoding.
+As $\alpha$ grows, both costs rise (\textbf{P3}).
+Per-video NLI-Score has standard deviation $0.55$ and correlates weakly with \Hcost{} (Spearman $-0.10$), so we keep primary faithfulness claims on the structured costs.

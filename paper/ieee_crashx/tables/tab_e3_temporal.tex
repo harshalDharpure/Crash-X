@@ -1,0 +1,24 @@
+\begin{table*}[!t]
+\centering
+\caption{Crash-window grounding on the CCD test split ($n{=}150$; the 9 no-crash videos score tIoU $=0$ for every row). 95\% bootstrap CI on tIoU in brackets. \crashlogic{} emits only two windows, $[2,3]$\,s (88 videos) and $[3,4]$\,s (53); predicted vs.\ true start Spearman $\rho{=}0.009$ ($p{=}0.91$). Zero-shot parse rates are $0.09$--$0.51$. Constant-window baselines ignore the video.}
+\label{tab:e3}
+\small
+\setlength{\tabcolsep}{8pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccc@{}}
+\toprule
+\textbf{System} & \textbf{tIoU}$\uparrow$ & \textbf{THR@.25}$\uparrow$ & \textbf{THR@.50}$\uparrow$ \\
+\midrule
+ZS Qwen2.5-VL-7B        & 0.012 $[.000,.028]$ & 0.000 & 0.000 \\
+ZS Qwen2.5-VL-3B        & 0.010 $[.003,.018]$ & 0.000 & 0.000 \\
+ZS Qwen2-VL-2B          & 0.000 $[.000,.000]$ & 0.000 & 0.000 \\
+ZS LLaVA-NeXT-Video-7B  & 0.024 $[.007,.045]$ & 0.000 & 0.000 \\
+\midrule
+\crashlogic{} (greedy)                  & 0.373 $[.312,.438]$ & 0.573 & 0.440 \\
+\crashlogic{} + \tcd{} ($\alpha{=}0.5$) & 0.394 $[.336,.456]$ & 0.600 & 0.473 \\
+\midrule
+Constant $[2,3]$\,s                     & 0.366 & 0.567 & 0.433 \\
+Constant $[3,4]$\,s (training mode)     & \textbf{0.408} & 0.593 & 0.473 \\
+Constant $[2,4]$\,s                     & \textbf{0.518} & \textbf{0.873} & \textbf{0.767} \\
+\bottomrule
+\end{tabular*}
+\end{table*}

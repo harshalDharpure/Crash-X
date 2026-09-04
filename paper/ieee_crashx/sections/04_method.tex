@@ -1,0 +1,76 @@
+\section{Systems}
+\label{sec:method}
+
+CrashX compares three families of systems under one prompt and one frame budget: zero-shot Video-LLMs, the domain-adapted \crashlogic{}, and \crashlogic{} decoded with Temporal Contrastive Decoding.
+
+\subsection{Input representation}
+\label{sec:input}
+Every system receives $K{=}8$ frames sampled uniformly from the 5-second clip (one every $\approx0.7$\,s) and resized so that the longer side is at most 224\,px, together with the prompt
+\begin{quote}\small
+\emph{``Analyze this car crash video spatiotemporally. Provide crash severity, impact point, exact timestamp window, and detailed causal explanation.''}
+\end{quote}
+Frames are passed to the processor as an ordered list of images.
+No absolute time stamps, frame indices, or frame rate are supplied---the standard usage for these models.
+We flag this now because it is the proximate cause of the temporal-prior effect in Section~\ref{sec:prior}: the language model can observe frame \emph{order} through positional encoding, but it has no signal that maps a frame to a time in seconds.
+
+\subsection{\crashlogic: supervised domain adaptation}
+\label{sec:crashlogic}
+
+\paragraph{Targets.}
+Training targets serialise the forensic fields and the Explanation into one string:
+\begin{quote}\small
+\code{Severity: $\ldots$ | Impact: $\ldots$ | Start: $t_s$s | End: $t_e$s | Vehicles: $\ldots$ | NumVehicles: $n$ | Weather: $\ldots$ | Explanation: $\langle$text$\rangle$}
+\end{quote}
+The serialisation has two consequences that matter for interpretation.
+It teaches the model to \emph{always} emit every field, which eliminates omission by construction and, as we show, does nothing for correctness.
+And it teaches the model to emit \code{Start}/\code{End} as literal seconds, an output it must produce whether or not it can perceive time.
+
+\paragraph{Optimisation.}
+We fine-tune \code{Qwen2.5-VL-7B-Instruct}~\cite{qwen25vl} with 4-bit NF4 quantisation and LoRA~\cite{lora,qlora} adapters ($r{=}16$, $\alpha_{\mathrm{LoRA}}{=}32$, dropout $0.05$) on the language model's attention and MLP projections, minimising the token-level negative log-likelihood of the target $y$ given frames $V$ and prompt $p$:
+\begin{equation}
+\mathcal{L}(\phi)=-\sum_{t=1}^{|y|}\log p_{\theta,\phi}\!\left(y_t\mid y_{<t},V,p\right),
+\label{eq:sft}
+\end{equation}
+with frozen backbone $\theta$ and trainable adapter $\phi$.
+Training runs five epochs at learning rate $2{\times}10^{-4}$, batch size 1 with gradient accumulation 8, and a 768-token sequence cap; it takes 3.4\,h on one NVIDIA A100-40GB and ends at training loss $3.09$ (full hyperparameter table: Table~\ref{tab:hyperparams}).
+
+\subsection{Temporal Contrastive Decoding}
+\label{sec:tcd}
+
+\paragraph{Decoding rule.}
+Let $\ell_t(V)$ be the next-token logits at step $t$ given the original frame sequence.
+\tcd{} forms a \emph{negative view} $V_{\mathrm{neg}}$ of the same frames and decodes greedily from
+\begin{equation}
+\ell_t^{\tcd}=(1+\alpha)\,\ell_t(V)-\alpha\,\ell_t(V_{\mathrm{neg}}),
+\label{eq:tcd}
+\end{equation}
+which is SEASON's contrast~\cite{season2025} with a fixed scalar $\alpha$.
+$\alpha{=}0$ recovers greedy decoding.
+Our primary negative is the \textbf{reverse} of the eight frames; the \textbf{shuffle} negative applies a fixed random permutation.
+Both are computed with the same adapted weights, so each decoding step costs two forward passes.
+
+\paragraph{Full SEASON.}
+As an ablation we run SEASON's complete recipe: a spatially corrupted view $V_S$ (Gaussian noise, $\sigma{=}0.35$), a temporally homogenised view $V_T$ (each frame blended with the clip mean, $\beta{=}0.5$), and per-token self-diagnostic weights $w_S,w_T$ from the Jensen--Shannon divergence between the frame-attention distributions of $V$ and each negative:
+\begin{equation}
+\ell_t=(1+\alpha)\,\ell_t(V)-\alpha\bigl(w_S\,\ell_t(V_S)+w_T\,\ell_t(V_T)\bigr).
+\label{eq:fullseason}
+\end{equation}
+
+\subsection{What a reversed negative can and cannot fix}
+\label{sec:mechanism}
+The rationale for Eq.~\eqref{eq:tcd} is that tokens whose probability \emph{depends on frame order} are amplified, while tokens equally probable under either order are left alone.
+Write a token's logit as a sum of an order-invariant part and an order-dependent part, $\ell_t(V)=u_t+v_t(V)$ with $v_t(V_{\mathrm{rev}})\approx-v_t(V)$ for cues that flip under reversal.
+Then Eq.~\eqref{eq:tcd} gives $\ell_t^{\tcd}\approx u_t+(1+2\alpha)\,v_t(V)$: the contrast rescales only the order-dependent component.
+This yields three testable predictions, which the analysis in Section~\ref{sec:analysis} checks.
+
+\begin{enumerate}[label=\textbf{P\arabic*}]
+  \item \textbf{Colour, weather, and agent identity are untouched.}
+  These cues are visible in every frame regardless of order, so $v_t{\approx}0$ for the tokens that carry them.
+  \tcd{} cannot reduce \textsc{Wrong-Agent} errors or weather conflicts.
+  \item \textbf{Timing tokens are helped only if the model already uses order.}
+  If the backbone's window prediction is insensitive to frame order, $\ell_t(V)\approx\ell_t(V_{\mathrm{rev}})$ on timestamp tokens and the contrast is a no-op there.
+  A learned temporal prior therefore survives \tcd.
+  \item \textbf{Large $\alpha$ amplifies noise, not signal.}
+  Because $v_t$ is small for most tokens, $(1+2\alpha)v_t$ is dominated by estimation noise at large $\alpha$; the decoded text drifts from the greedy output and both omission and hallucination should rise.
+\end{enumerate}
+The shuffle negative destroys within-clip adjacency as well as global order and so perturbs more tokens; we expect it to move lexical metrics more than reversal without improving faithfulness.

@@ -1,0 +1,20 @@
+\section{Decoding Ablation}
+\label{sec:ablation}
+
+We fix the \crashlogic{} checkpoint and vary only the decoding rule.
+Table~\ref{tab:e4} summarises the three configurations that matter for the claim; the full matrix (all $\alpha$, shuffle, SEASON) is Table~\ref{tab:e4-full}.
+
+\input{tables/tab_e4_ablation}
+
+\paragraph{Contrast strength.}
+From greedy to $\alpha{=}0.5$ every faithfulness metric moves in the desired direction by a small, non-significant amount.
+At $\alpha{=}2.0$ hallucination, omission, ROUGE-L, and Full-NLI all degrade significantly (Table~\ref{tab:paired}), and the colour-disjoint agent error rises from $21\%$ to $30\%$ (Table~\ref{tab:fields}).
+The trajectory matches prediction P3: beyond $\alpha{\approx}1$ the amplified component is mostly noise.
+
+\paragraph{Shuffle and full SEASON.}
+Neither alternative beats reverse \tcd{} on any faithfulness metric (Table~\ref{tab:e4-full}).
+Shuffle posts the best lexical numbers and the worst NLI-Score; full SEASON raises both costs relative to greedy.
+The failure to move \Hcost{} is therefore not a tuning problem: seven configurations spanning two negative constructions leave colour, weather, and severity conflict rates where greedy decoding put them.
+
+\paragraph{What the ablation establishes.}
+Mild temporal contrast is safe but ineffective; strong contrast is harmful; no recipe tested here reduces hallucination on this task.

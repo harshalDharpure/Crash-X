@@ -1,0 +1,80 @@
+% CrashX — IEEE Conference Submission (Overleaf-ready)
+% Compile: pdfLaTeX → BibTeX → pdfLaTeX ×2
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue
+}
+
+% Shorthands
+\newcommand{\crashlogic}{CrashLogic-7B}
+\newcommand{\tcd}{TCD}
+\newcommand{\Hcost}{\ensuremath{\mathcal{C}_{\mathrm{H}}}}
+\newcommand{\Ocost}{\ensuremath{\mathcal{C}_{\mathrm{O}}}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\begin{document}
+
+\title{CrashX: Domain Adaptation Removes Omissions but Not Hallucinations\\in Video-LLM Explanations of Traffic Accidents}
+
+\author{
+\IEEEauthorblockN{Anonymous Authors}
+\IEEEauthorblockA{
+\textit{Anonymous Institution}\\
+Anonymous Email}
+}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\begin{IEEEkeywords}
+Traffic accident understanding, Video-LLM, hallucination, omission, explanation faithfulness, temporal grounding, contrastive decoding, QLoRA, Car Crash Dataset
+\end{IEEEkeywords}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_dataset}
+\input{sections/04_method}
+\input{sections/05_experiments}
+\input{sections/06_results}
+\input{sections/07_analysis}
+\input{sections/08_ablation}
+\input{sections/09_qualitative}
+\input{sections/10_limitations}
+\input{sections/11_conclusion}
+
+\appendix
+\input{sections/12_appendix}
+
+\section*{Reproducibility Statement}
+Code, data splits, all 1{,}650 model outputs (11 systems $\times$ 150 test videos), per-video metric vectors, and the scripts that regenerate every table and figure in this paper are released at
+\url{https://github.com/harshalDharpure/Crash-X}.
+No number in this paper requires API access or GPU inference to reproduce from the released outputs.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

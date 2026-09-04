@@ -1,0 +1,79 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Explanation quality}
+\label{sec:quality}
+
+Table~\ref{tab:e1} reports lexical and embedding overlap between generated and reference explanations.
+Zero-shot systems cluster tightly (BLEU-4 $0.016$--$0.026$, BERTScore $0.418$--$0.547$); the best of them, LLaVA-NeXT-Video-7B, is an order of magnitude below the adapted model on BLEU-4.
+Size does not explain the ordering: Qwen2.5-VL-7B trails its 3B sibling on every lexical metric because it spends its 256-token budget on markdown headers before reaching any narrative.
+
+\input{tables/tab_e1_quality}
+
+\crashlogic{} reaches BLEU-4 $0.142$, ROUGE-L $0.336$, METEOR $0.371$, CIDEr $0.508$, BERTScore $0.686$.
+Paired against zero-shot Qwen2.5-VL-7B, per-video BLEU improves on 149 of 150 videos and ROUGE-L on 150 of 150 ($p<10^{-4}$; Table~\ref{tab:paired}).
+Adding \tcd{} at $\alpha{=}0.5$ leaves BLEU-4 and BERTScore unchanged to three decimals and moves ROUGE-L by $+0.003$ (paired 95\% CI $[-0.005,+0.011]$).
+Fine-tuning is responsible for all lexical gains; no decoding variant changes any lexical metric significantly in the positive direction (Section~\ref{sec:ablation}).
+
+\subsection{Entailment against the forensic ground truth}
+\label{sec:faith}
+
+We also score each output with a DeBERTa-v3 NLI cross-encoder (full matrix in Table~\ref{tab:e2}).
+Two readings matter.
+With the extracted Explanation as hypothesis, fine-tuning raises entailment mass ($P_e$: $0.139\to0.224$, $p{=}0.007$) but raises contradiction mass by more ($P_c$: $0.092\to0.229$, $p<10^{-4}$), so NLI-Score alone is flat or slightly worse (Table~\ref{tab:paired}).
+Zero-shot models mostly say nothing and are scored as neutral rather than wrong.
+With the \emph{entire} output as hypothesis (Full-NLI), the ordering reverses: \crashlogic{} greedy scores $0.247$ against $0.005$--$0.111$ for zero-shot ($\Delta{=}{+}0.170$ vs.\ Qwen2.5-VL-7B, $p{=}0.0005$).
+We therefore treat NLI as a secondary signal and place the primary faithfulness claims on the structured costs below.
+
+\subsection{Omission versus hallucination}
+\label{sec:ho}
+
+Table~\ref{tab:ho} is the central result.
+It separates what each system fails to say from what it says wrongly, with bootstrap intervals on both.
+
+\input{tables/tab_ho}
+
+\paragraph{Adaptation eliminates omission.}
+Zero-shot Qwen2.5-VL-7B omits $46\%$ of the forensic content the ground truth specifies; \crashlogic{} omits $11\%$.
+The paired difference is $-0.356$ (95\% CI $[-0.382,-0.328]$, $p<10^{-4}$), and the omission cost falls on 140 of 150 videos and rises on none.
+Per field (Table~\ref{tab:fields-full}): the window is missing or badly placed in $98\%$ of zero-shot outputs against $43\%$ after adaptation; weather in $84\%$ against $12\%$; vehicles in $19\%$ against $2\%$.
+The serialised target format does what it was designed to do.
+
+\paragraph{Adaptation does not reduce hallucination.}
+The hallucination cost of \crashlogic{} greedy is $0.223$ (95\% CI $[0.200,0.248]$).
+Zero-shot Qwen2.5-VL-7B scores $0.227$ ($[0.188,0.268]$).
+The paired difference is $-0.005$ ($[-0.051,+0.041]$, $p{=}0.81$; 67 videos better, 68 worse).
+The two systems assert very different amounts---the adapted model emits all five fields on every video, the zero-shot model $61\%$ of them on average---but the fraction of asserted claims that contradict the ground truth is the same.
+Domain adaptation has converted silence into assertions, roughly one in five of which is false.
+The finding echoes Gekhman~\emph{et al.}~\cite{gekhman2024finetuning} for text-only LLMs: supervised targets the model cannot ground are learned as a policy of confident answering.
+LLaVA-NeXT-Video-7B and the smaller Qwen models hallucinate more than either ($0.285$--$0.564$), so adaptation \emph{is} the best available system on \Hcost{}; the point is that it does not improve on its own backbone.
+
+\subsection{Temporal grounding}
+\label{sec:temporal}
+
+Table~\ref{tab:e3} reports crash-window metrics with the prior-only baselines of Section~\ref{sec:metrics-temporal}.
+Zero-shot systems emit a parseable window in $9$--$51\%$ of videos and score tIoU $\leq0.024$.
+\crashlogic{} emits one on every video and scores $0.373$ (THR@0.50 $=0.440$); \tcd{} at $\alpha{=}0.5$ scores $0.394$ (THR@0.50 $=0.473$).
+
+\input{tables/tab_e3_temporal}
+
+The baselines reframe these numbers.
+The constant window $[3,4]$\,s---the most frequent training window---scores tIoU $0.408$ and THR@0.50 $=0.473$, matching \tcd{} exactly on the hit rate and exceeding both adapted systems on mean tIoU.
+The constant window $[2,4]$\,s scores $0.518$.
+\crashlogic{} emits only two distinct windows, $[2,3]$\,s (88 crash videos) and $[3,4]$\,s (53), and which one it picks is unrelated to when the crash happens (Spearman $\rho{=}0.009$ between predicted and true start, $p{=}0.91$).
+Section~\ref{sec:prior} examines this further.
+The honest summary of Table~\ref{tab:e3} is that adaptation teaches the model the CCD temporal marginal, and that tIoU without a prior baseline would have hidden this.
+
+\subsection{Does temporal contrastive decoding help?}
+\label{sec:tcd-results}
+
+Table~\ref{tab:paired} gives paired statistics for the key comparisons.
+At $\alpha{=}0.5$ with the reverse negative, no metric changes significantly: NLI-Score $\Delta{=}{+}0.062$ ($[-0.034,+0.156]$, $p{=}0.44$), hallucination cost $\Delta{=}{-}0.011$ ($p{=}0.21$), omission cost $\Delta{=}{-}0.004$ ($p{=}0.48$), tIoU $\Delta{=}{+}0.021$ ($p{=}0.58$).
+Every point estimate is in the hoped-for direction and every interval includes zero.
+At $\alpha{=}2.0$ the contrast becomes harmful: hallucination cost $+0.030$ ($p{=}0.031$), omission cost $+0.021$ ($p{=}0.026$), ROUGE-L $-0.016$ ($p{=}0.005$), Full-NLI $-0.098$ ($p{=}0.014$).
+
+\input{tables/tab_paired}
+
+A methodological note: an unpaired normal-approximation interval with a pooled standard deviation of $0.25$ would call the $\alpha{=}0.5$ NLI gain significant ($z\approx2.1$).
+The actual per-video standard deviation of NLI-Score is $\approx0.55$, and the paired test does not support the claim~\cite{dror2018hitchhiker}.
+We therefore treat mild \tcd{} as \emph{safe but ineffective} on this task and strong \tcd{} as \emph{harmful}, and we spend the next section explaining why.

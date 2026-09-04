@@ -1,0 +1,21 @@
+\begin{table*}[!t]
+\centering
+\caption{Full decoding ablation on the fixed \crashlogic{} checkpoint ($n{=}150$). BLEU-4 is corpus-level. $^{\dagger}$ marks a significant degradation relative to greedy ($p<0.05$). No variant improves significantly on any column. Main-paper summary: Table~\ref{tab:e4}.}
+\label{tab:e4-full}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+\textbf{Variant} & \textbf{BLEU-4}$\uparrow$ & \textbf{ROUGE-L}$\uparrow$ & \textbf{BERTScore}$\uparrow$ & \textbf{NLI-Score}$\uparrow$ & \textbf{Full-NLI}$\uparrow$ & \textbf{\Hcost{}}$\downarrow$ & \textbf{\Ocost{}}$\downarrow$ \\
+\midrule
+Greedy ($\alpha{=}0$)        & 0.142 & 0.336 & 0.686 & $-$0.005 & \textbf{0.247} & 0.223 & 0.107 \\
+\tcd{} $\alpha{=}0.5$ (reverse) & 0.142 & 0.339 & 0.686 & 0.057 & 0.234 & \textbf{0.212} & \textbf{0.102} \\
+\tcd{} $\alpha{=}1.0$ (reverse) & 0.140 & 0.338 & 0.684 & \textbf{0.090} & 0.237 & 0.227 & 0.112 \\
+\tcd{} $\alpha{=}1.5$ (reverse) & 0.133 & 0.327 & 0.681 & $-$0.022 & 0.223 & 0.249 & 0.124$^{\dagger}$ \\
+\tcd{} $\alpha{=}2.0$ (reverse) & 0.133 & 0.319$^{\dagger}$ & 0.676 & 0.016 & 0.148$^{\dagger}$ & 0.253$^{\dagger}$ & 0.128$^{\dagger}$ \\
+\tcd{} $\alpha{=}0.5$ (shuffle) & 0.143 & \textbf{0.340} & \textbf{0.688} & $-$0.025 & 0.205 & 0.233 & 0.114 \\
+SEASON (full, $\alpha{=}1.0$)   & \textbf{0.147} & 0.332 & 0.685 & 0.064 & 0.204 & 0.240 & 0.119 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

@@ -1,0 +1,23 @@
+\begin{table*}[!t]
+\centering
+\caption{Systems evaluated on the CCD test split ($n{=}150$). All Video-LLMs receive the same prompt and the same 8 uniformly sampled frames ($\leq$224\,px). Prior-only baselines emit a constant crash window and no text.}
+\label{tab:baselines}
+\small
+\begin{tabular}{@{}llp{3.1cm}@{}}
+\toprule
+\textbf{System} & \textbf{Size} & \textbf{Adaptation / decoding} \\
+\midrule
+Qwen2.5-VL~\cite{qwen25vl}          & 7B & Zero-shot, greedy \\
+Qwen2.5-VL~\cite{qwen25vl}          & 3B & Zero-shot, greedy \\
+Qwen2-VL~\cite{qwen2vl}             & 2B & Zero-shot, greedy \\
+LLaVA-NeXT-Video~\cite{llavanextvideo} & 7B & Zero-shot, greedy \\
+\midrule
+\crashlogic{} (ours)                & 7B+LoRA & QLoRA on 1{,}198 CCD clips; greedy \\
+\quad +\tcd{} reverse               & 7B+LoRA & Eq.~\eqref{eq:tcd}, $\alpha\in\{0.5,1,1.5,2\}$ \\
+\quad +\tcd{} shuffle               & 7B+LoRA & Eq.~\eqref{eq:tcd}, $\alpha{=}0.5$ \\
+\quad +SEASON (full)                & 7B+LoRA & Eq.~\eqref{eq:fullseason}, $\alpha{=}1$ \\
+\midrule
+Constant window                     & prior   & $[2,3]$\,s, $[3,4]$\,s, or $[2,4]$\,s \\
+\bottomrule
+\end{tabular}
+\end{table*}

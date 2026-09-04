@@ -1,0 +1,19 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We set out to measure whether Video-LLMs can explain dashcam collisions faithfully, and we separated the two ways they can fail.
+Zero-shot models omit: on CCD they leave out nearly half of the forensic content and often never mention the crash.
+Domain adaptation with QLoRA removes the omissions almost entirely and lifts every lexical metric by a wide, statistically unambiguous margin.
+It does not touch hallucination.
+The adapted model asserts every field on every video, one in five of those assertions contradicts the ground truth, one in five explanations names a vehicle of the wrong colour, and every confirmed no-crash video receives a fabricated collision under the decoding variants that score best on lexical metrics.
+
+We also showed that the adapted model's crash-window predictions are a reproduction of the training-set marginal---two windows, no correlation with the true onset, beaten by a constant---and that this arises because the model is never told what time a frame is.
+Temporal IoU reported without a prior-only baseline would have concealed this, and we suggest that such baselines become standard in accident-VLM evaluation.
+
+Finally, we tested the natural training-free remedy and found that it does not work here, and we explained why: a reversed-frame negative preserves every order-invariant cue, so it cannot reach the errors that dominate---wrong colours, wrong labels, and a prior that does not depend on order to begin with.
+Mild contrast is harmless and nudges causal phrasing in the right direction; strong contrast makes both omission and hallucination significantly worse.
+
+The constructive message is about what to fix next.
+Omission is a data and format problem, and it is solved.
+Hallucination on this task has three identifiable sources---no time signal, a prompt that presupposes a crash, and a supervised objective that rewards confident assertion---and each suggests a specific intervention: time-stamped inputs or time tokens, a no-crash-aware prompt and target, and a training signal that penalises unsupported claims rather than rewarding their presence.
+We release all outputs, per-video scores, and evaluation code so that those interventions can be measured against the same bar.

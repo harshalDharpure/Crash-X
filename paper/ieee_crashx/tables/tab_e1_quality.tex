@@ -1,0 +1,21 @@
+\begin{table*}[!t]
+\centering
+\caption{Explanation quality on the CCD test split ($n{=}150$), computed on the Explanation field (whole output for systems that emit no field). BLEU-4 is corpus-level; other metrics are per-video means. $\uparrow$: higher is better. Best per column in \textbf{bold}. No \tcd{} variant differs significantly from greedy on any column (Table~\ref{tab:paired}).}
+\label{tab:e1}
+\small
+\setlength{\tabcolsep}{8pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccc@{}}
+\toprule
+\textbf{System} & \textbf{BLEU-4}$\uparrow$ & \textbf{ROUGE-L}$\uparrow$ & \textbf{METEOR}$\uparrow$ & \textbf{CIDEr}$\uparrow$ & \textbf{BERTScore}$\uparrow$ \\
+\midrule
+ZS Qwen2.5-VL-7B        & 0.016 & 0.160 & 0.203 & 0.338 & 0.486 \\
+ZS Qwen2.5-VL-3B        & 0.019 & 0.180 & 0.234 & 0.394 & 0.518 \\
+ZS Qwen2-VL-2B          & 0.018 & 0.120 & 0.132 & 0.221 & 0.418 \\
+ZS LLaVA-NeXT-Video-7B  & 0.026 & 0.197 & 0.275 & 0.449 & 0.547 \\
+\midrule
+\crashlogic{} (greedy)                  & \textbf{0.142} & 0.336 & \textbf{0.371} & 0.508 & \textbf{0.686} \\
+\crashlogic{} + \tcd{} ($\alpha{=}0.5$) & \textbf{0.142} & \textbf{0.339} & 0.369 & \textbf{0.515} & \textbf{0.686} \\
+\crashlogic{} + \tcd{} ($\alpha{=}1.0$) & 0.140 & 0.338 & 0.365 & 0.507 & 0.684 \\
+\bottomrule
+\end{tabular*}
+\end{table*}

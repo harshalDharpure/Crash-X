@@ -1,0 +1,16 @@
+\begin{table*}[!t]
+\centering
+\caption{Decoding ablation on the fixed \crashlogic{} checkpoint ($n{=}150$). Mild reverse \tcd{} is safe but never significantly better than greedy; strong contrast significantly hurts (Table~\ref{tab:paired}). Shuffle and full SEASON rows are in Table~\ref{tab:e4-full}. $^{\dagger}$ marks a significant degradation vs.\ greedy ($p<0.05$).}
+\label{tab:e4}
+\small
+\setlength{\tabcolsep}{10pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+\textbf{Variant} & \textbf{ROUGE-L}$\uparrow$ & \textbf{Full-NLI}$\uparrow$ & \textbf{\Hcost{}}$\downarrow$ & \textbf{\Ocost{}}$\downarrow$ \\
+\midrule
+Greedy ($\alpha{=}0$)           & 0.336 & \textbf{0.247} & 0.223 & 0.107 \\
+\tcd{} $\alpha{=}0.5$ (reverse) & \textbf{0.339} & 0.234 & \textbf{0.212} & \textbf{0.102} \\
+\tcd{} $\alpha{=}2.0$ (reverse) & 0.319$^{\dagger}$ & 0.148$^{\dagger}$ & 0.253$^{\dagger}$ & 0.128$^{\dagger}$ \\
+\bottomrule
+\end{tabular*}
+\end{table*}

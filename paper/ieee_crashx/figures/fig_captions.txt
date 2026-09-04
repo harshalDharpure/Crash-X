@@ -1,0 +1,13 @@
+Figure captions (plain text)
+
+Fig 1 (fig:pipeline):
+CrashX systems and evaluation stack. CrashLogic-7B is a QLoRA-adapted Qwen2.5-VL-7B fed 8 uniformly sampled keyframes without time stamps. Decoding is greedy or Temporal Contrastive Decoding (TCD), which contrasts logits against a temporally reversed copy of the same frames. Outputs are scored for lexical overlap, NLI faithfulness, omission (C_O) and hallucination (C_H) costs, and temporal grounding against constant-window priors.
+
+Table (tab:qualitative):
+Qualitative comparison on three held-out test videos, one per finding: 001227 (adaptation recovers the narrative), 000104 (adaptation hallucinates the agent), 000661 (the collision prior on a no-crash video). Claims that contradict the reference are marked in red.
+
+Fig 3 (fig:ablation):
+Decoding ablation on CrashLogic-7B: hallucination cost C_H, omission cost C_O, and NLI-Score for greedy, reverse TCD at alpha in {0.5, 1.0, 1.5, 2.0}, shuffle TCD at alpha=0.5, and full SEASON. No variant reduces C_H below greedy; alpha >= 1.5 raises both costs.
+
+Fig 4 (fig:temporal-prior):
+The temporal prior. Ground-truth crash starts span the whole clip; the adapted model predicts only 2 s or 3 s, always with a 1-second window, matching the two most frequent training windows. Predicted and true starts are uncorrelated (Spearman rho ~ 0).

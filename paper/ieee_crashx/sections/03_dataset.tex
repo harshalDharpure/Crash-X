@@ -1,0 +1,93 @@
+\section{Task, Data, and Evaluation Protocol}
+\label{sec:dataset}
+
+\subsection{Task}
+Given a dashcam clip $V$, a system must produce a free-text \textbf{Explanation} of the collision and, optionally, structured forensic fields.
+We evaluate the Explanation as the primary object and use the structured fields only to \emph{audit} it: to decide which of the model's claims are missing (omission) or contradicted (hallucination) relative to ground truth.
+
+\subsection{Car Crash Dataset and splits}
+We build on CCD~\cite{bao2020nondeterministic}: 1{,}500 five-second dashcam clips at 10\,fps.
+Each clip carries human annotations for severity (\code{minor}/\code{moderate}/\code{severe}/\code{fatal}/\code{n/a}), impact location, involved vehicles (colour and type), weather, an integer-second crash window $[t_s^\star,t_e^\star]$, and a multi-sentence Explanation ($95.7\pm25.2$ words on the test split).
+Two rows with unparseable timestamps are dropped, leaving 1{,}498 clips.
+
+\paragraph{Split protocol.}
+We draw a stratified 80/10/10 split by severity (\code{StratifiedShuffleSplit}, seed 42): 1{,}198 / 150 / 150 videos (66 / 8 / 9 no-crash; Table~\ref{tab:dataset}).
+Video IDs are pairwise disjoint across splits; severity proportions match to within $0.3$ points.
+The validation split was reserved but not used for model selection in the final run (Section~\ref{sec:limitations}).
+
+\paragraph{No-crash videos.}
+CCD includes near-miss clips labelled \code{n/a} whose Explanation states that no collision occurred (66 in train, 9 in test).
+Six of the nine test \code{n/a} explanations say so unambiguously (``fortunately, no accident occurred''); three describe an evasive manoeuvre without stating the outcome.
+We use the six unambiguous clips as a small but decisive probe for fabricated collisions (Section~\ref{sec:nocrash}).
+Their ground-truth window is empty, so they contribute tIoU $=0$ to all systems.
+
+\paragraph{Temporal structure of the ground truth.}
+Crash windows are short and concentrated: on the 141 crash videos of the test split the window starts in $[2,4)$\,s for 80\% of clips and lasts $1.55$\,s on average (77 windows of 1\,s, 39 of 2\,s, 17 of 3\,s).
+The most frequent training window is $[3,4]$\,s (314 of 1{,}132 crash clips), followed by $[2,3]$\,s (253).
+This concentration is exactly what makes a prior-only baseline necessary (Section~\ref{sec:metrics-temporal}).
+
+\subsection{Metrics}
+\label{sec:metrics}
+
+\paragraph{Lexical quality.}
+On the Explanation field we report corpus-level BLEU-4~\cite{papineni2002bleu} via sacreBLEU~\cite{post2018sacrebleu}, and mean per-video ROUGE-L~\cite{lin2004rouge}, METEOR~\cite{banerjee2005meteor}, CIDEr~\cite{vedantam2015cider}, and BERTScore-F1~\cite{zhang2020bertscore} (\code{bert-base-uncased}).
+Because corpus BLEU and mean per-video BLEU differ ($0.142$ vs.\ $0.123$ for \crashlogic), we use corpus BLEU in headline tables and per-video BLEU only inside paired tests.
+For systems that do not emit an \code{Explanation:} field, the entire output is scored as the explanation.
+
+\paragraph{Entailment (NLI).}
+A cross-encoder NLI model (\code{cross-encoder/nli-deberta-v3-small}~\cite{he2023debertav3}) scores each pair with the ground-truth forensic text as \emph{premise} and the model output as \emph{hypothesis}.
+The premise concatenates the structured fields rendered as sentences with the reference Explanation.
+Let $P_e$, $P_c$, $P_n$ be entailment, contradiction, and neutral probabilities.
+We report
+\begin{equation}
+\mathrm{NLI\text{-}Score}=P_e-P_c,\qquad \mathrm{NLI\text{-}Loss}=-\log P_e ,
+\label{eq:nli}
+\end{equation}
+both with the Explanation as hypothesis (\emph{NLI}) and with the \emph{entire} output as hypothesis (\emph{Full-NLI}).
+The second variant is immune to how the Explanation is extracted and therefore fairer to zero-shot systems that ignore the output format.
+
+\paragraph{Omission and hallucination costs.}
+\label{sec:metrics-ho}
+Following ARGUS~\cite{argus2025}, we define two normalised costs per video, but over CCD's five structured fields $\mathcal{F}=\{\text{severity},\text{impact},\text{vehicles},\text{weather},\text{window}\}$ plus the Explanation, so that they are deterministic and reproducible without an LLM judge.
+Let $A\subseteq\mathcal{F}$ be the fields the model \emph{asserts} (parsed from its output, with keyword fallbacks for unstructured text) and $G\subseteq\mathcal{F}\cup\{\text{expl}\}$ the fields the ground truth specifies.
+A field $f\in A$ \emph{conflicts} if the asserted value is disjoint from the ground truth (severity: label mismatch; impact/vehicles/weather: no shared token; window: tIoU $<0.1$).
+A field $f\in G$ is \emph{omitted} if it is not asserted or its value shares nothing with the ground truth (window: tIoU $<0.25$; Explanation: fewer than 8 words).
+Then
+\begin{equation}
+\mathcal{C}_{\mathrm{H}}=\frac{|\{f\in A:\ f\ \text{conflicts}\}|}{|A|},\qquad
+\mathcal{C}_{\mathrm{O}}=\frac{|\{f\in G:\ f\ \text{omitted}\}|}{|G|},
+\label{eq:ho}
+\end{equation}
+with $\mathcal{C}_{\mathrm{H}}{=}1$ if $A{=}\emptyset$.
+\Hcost{} is a \emph{conditional} rate---the fraction of what the model chose to say that is wrong---so it is comparable across systems that assert different numbers of fields, and we always report the assertion rate $|A|/|\mathcal{F}|$ beside it.
+We also report per-field conflict rates (fraction of all videos with a conflict on field $f$), and a stricter \emph{colour-disjoint} agent check that flags an output whose vehicle colours share nothing with the ground truth, because token overlap on generic types (``car'') makes the field-level vehicle check lenient.
+
+\paragraph{Temporal grounding, with prior baselines.}
+\label{sec:metrics-temporal}
+For predicted window $[\hat t_s,\hat t_e]$ and reference $[t_s^\star,t_e^\star]$,
+\begin{equation}
+\mathrm{tIoU}=\frac{|[\hat t_s,\hat t_e]\cap[t_s^\star,t_e^\star]|}{|[\hat t_s,\hat t_e]\cup[t_s^\star,t_e^\star]|},
+\label{eq:tiou}
+\end{equation}
+averaged over all 150 videos (missing or unparseable windows score 0), plus hit rates THR@0.25 and THR@0.50.
+To interpret tIoU we add three \emph{prior-only baselines} that ignore the video: the constant windows $[2,3]$\,s, $[3,4]$\,s (the training mode), and $[2,4]$\,s.
+We also report the Spearman correlation between predicted and true start times over crash videos and the multiset of distinct windows a system emits.
+A system whose tIoU does not exceed the constant baselines, or whose predicted starts are uncorrelated with true starts, has not localised anything.
+
+\paragraph{Error taxonomy.}
+\label{sec:taxonomy}
+We code each output on crash videos with five non-exclusive failure labels plus \textsc{Clean}, using automatic proxies so that counts are reproducible:
+\textsc{No-Narrative} (under 8 words, or under 30 words with no collision verb);
+\textsc{Fluent-Fabrication} ($\geq$30 words, no collision verb);
+\textsc{Wrong-Agent} (colour-disjoint vehicles);
+\textsc{Wrong-Time} (window asserted with tIoU $<0.1$);
+\textsc{Wrong-Cause} (agents consistent but NLI contradiction $P_c>0.5$);
+\textsc{Under-Specific} (ground truth names a colour, output names none).
+The proxies are conservative for \textsc{Wrong-Cause}, which we therefore read as a lower bound.
+
+\subsection{Statistics}
+\label{sec:stats}
+All systems are evaluated on the same 150 videos, so every comparison is paired.
+For each metric we report the mean, a 95\% percentile bootstrap interval (2{,}000 resamples)~\cite{efron1993bootstrap}, and for each pair of systems the mean per-video difference with a paired-bootstrap interval (5{,}000 resamples), a two-sided Wilcoxon signed-rank $p$-value~\cite{wilcoxon1945,dror2018hitchhiker}, and win/loss/tie counts.
+Corpus BLEU has no per-video form; its paired test uses per-video BLEU.
+We use $p<0.05$ and call an effect \emph{directional} when the paired interval includes zero.

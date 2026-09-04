@@ -1,0 +1,17 @@
+\begin{table*}[!t]
+\centering
+\caption{CCD split used in CrashX (stratified 80/10/10 by severity, seed 42; zero video-ID overlap). ``No-crash'' counts clips labelled \code{n/a} whose reference states that no collision occurred.}
+\label{tab:dataset}
+\small
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+\textbf{Split} & \textbf{Videos} & \textbf{\%} & \textbf{No-crash} & \textbf{Role} \\
+\midrule
+Train & 1{,}198 & 80.0 & 66 & QLoRA fine-tuning \\
+Val   & 150    & 10.0 & 8  & Reserved (unused) \\
+Test  & 150    & 10.0 & 9 (6 unambiguous) & All reported metrics \\
+\midrule
+Total & 1{,}498 & 100 & 83 & 2 of 1{,}500 rows dropped \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,45 @@
+\section{Limitations and Threats to Validity}
+\label{sec:limitations}
+
+\paragraph{Test-set size.}
+One hundred and fifty videos is enough to detect the adaptation effects ($p<10^{-4}$ on every completeness metric) and to rule out large \tcd{} effects, but not to detect small ones: the paired interval on NLI-Score at $\alpha{=}0.5$ spans $[-0.034,+0.156]$.
+A \tcd{} gain of $+0.05$ NLI-Score or $-0.01$ \Hcost{} would require roughly four times the data to establish.
+The no-crash probe uses six videos; we report counts, not rates, and draw no inference beyond ``fabrication occurs and worsens under contrast''.
+
+\paragraph{Automatic judges.}
+The structured costs depend on regular-expression field extraction and token-overlap matching, which we chose for determinism.
+They are lenient on vehicle \emph{type} (any shared token counts) and strict on colour; we report both.
+The NLI cross-encoder abstains on most pairs and correlates weakly with the structured cost (Spearman $-0.10$ with \Hcost{}).
+An LLM judge in the ARGUS style~\cite{argus2025} would give sentence-level hallucination and omission rates on the free text itself; we did not use one because we wanted every number reproducible offline, and because judge-model choice would add a second source of variance to a study whose main point is variance.
+
+\paragraph{No human evaluation.}
+We prepared a blinded 200-item, three-annotator Likert protocol (temporal accuracy, faithfulness, explanation quality) and release the item pack, but the annotations were not completed at the scale the protocol requires.
+The structured costs are therefore the paper's faithfulness ground truth.
+Human ratings would most likely sharpen, not reverse, the omission/hallucination asymmetry, since the fabricated collisions in Section~\ref{sec:nocrash} are unambiguous to a human viewer.
+
+\paragraph{Frame budget and time information.}
+Eight frames at $\leq224$\,px and no absolute time stamps is the standard, cheap usage of these models and the setting our compute allowed, but it is also the reason the temporal prior arises.
+We have shown that the prior exists and beats the model; we have \emph{not} shown that a time-aware input~\cite{timechat,vtimellm,lita}, denser sampling, or a time-token objective would remove it on CCD.
+That is the obvious next experiment.
+
+\paragraph{Prompt presupposition.}
+The prompt asks the model to ``analyze this car crash video''.
+For the 5.5\% of clips that are near-misses this presupposes a false fact.
+We kept the prompt identical for all systems because changing it would confound the comparison, but the fabrication counts in Table~\ref{tab:nocrash} are an upper bound on what a neutrally phrased prompt would produce.
+
+\paragraph{Validation split and model selection.}
+The 150-video validation split was reserved but not used for checkpoint selection; the final checkpoint is the last of five epochs.
+No hyperparameter of \crashlogic{} or \tcd{} was tuned on the test split---$\alpha{=}0.5$ was chosen before the paired tests were run, and the paired tests then declined to support it.
+
+\paragraph{Single backbone, single seed.}
+All adapted systems derive from one QLoRA run of one 7B backbone.
+Variance across training seeds is unmeasured, and stronger or time-aware backbones may not share the temporal prior.
+The zero-shot comparison spans four models from two families and the hallucination cost is high for all of them, which suggests the omission/hallucination asymmetry is not specific to Qwen2.5-VL, but we have adapted only one.
+
+\paragraph{No proprietary systems.}
+GPT-4o, Gemini, and similar API models are absent.
+VRU-Accident~\cite{vruaccident} reports that Gemini-1.5-Flash leads its dense-captioning leaderboard, and ARGUS~\cite{argus2025} reports that Gemini-2.0-Flash still hallucinates in about 41\% of caption sentences; we expect proprietary systems to reduce omission substantially and hallucination less, but that is a prediction, not a result.
+
+\paragraph{Simplified SEASON.}
+Our temporal homogenisation acts in pixel space rather than on vision-encoder features, and our frame-attention estimate is a uniform partition of the key sequence.
+The full-SEASON row is therefore a faithful \emph{implementation of the recipe} on this backbone, not a reproduction of the original system.

@@ -1,0 +1,54 @@
+\section{Introduction}
+\label{sec:intro}
+
+A dashcam records a rear-end collision: the camera car closes on a slow black truck and strikes it.
+Asked to explain the crash, a strong open Video-LLM returns three paragraphs on overcast skies, road surface, and ``traffic conditions''.
+The truck is never mentioned.
+A domain-adapted version of the same model does name a lead vehicle and a rear-end impact---but calls the truck a red car, and places the impact in a one-second window it uses for more than half of all videos in the test set.
+
+These two outputs fail differently, and the difference matters.
+The first \emph{omits}: it says nothing false, but nothing useful.
+The second \emph{hallucinates}: it commits to specific, checkable claims that are wrong.
+For an insurer, an investigator, or an autonomous-driving safety team, the second failure is worse, because a confident and specific narrative is precisely the kind that gets acted upon~\cite{maynez2020faithfulness,ji2023survey}.
+Yet standard captioning metrics reward the second output over the first, and a paper reporting only BLEU or BERTScore would conclude that domain adaptation has ``solved'' the problem.
+
+\paragraph{This paper.}
+We ask a narrower question than ``can Video-LLMs explain crashes?''.
+We ask \emph{which} failures domain adaptation fixes, which it leaves untouched, and whether a popular training-free remedy---decode-time contrastive suppression of temporally implausible tokens~\cite{season2025,vcd}---repairs what remains.
+We study this on the Car Crash Dataset (CCD)~\cite{bao2020nondeterministic}, whose 1{,}500 dashcam clips come with structured forensic fields (severity, impact location, vehicles, weather, crash window) and a $\sim$95-word free-text explanation, so that every claim a model makes can be scored against a human-written reference.
+
+We evaluate four open Video-LLMs zero-shot, fine-tune Qwen2.5-VL-7B~\cite{qwen25vl} with QLoRA~\cite{qlora} into \crashlogic{}, and evaluate seven decode-time variants of Temporal Contrastive Decoding (\tcd).
+Beyond lexical metrics we score each output for \emph{omission} and \emph{hallucination} with an ARGUS-style dual cost~\cite{argus2025} adapted to CCD's structured fields, for entailment against the forensic ground truth with an NLI cross-encoder, and for temporal grounding against prior-only baselines.
+All comparisons use paired tests on aligned per-video scores~\cite{dror2018hitchhiker}.
+
+\paragraph{Findings.}
+Three results organise the paper.
+
+\emph{(i) Adaptation removes omissions, not hallucinations.}
+Fine-tuning reduces the omission cost from $0.462$ to $0.107$ (improved on 140/150 videos, $p<10^{-4}$) and raises BLEU-4 ninefold.
+The hallucination cost is unchanged ($0.227\to0.223$, $p=0.81$).
+The adapted model asserts every forensic field for every video, and roughly one field in five is wrong.
+On the six test videos whose ground truth states that no collision occurred, the adapted model fabricates one in three cases under greedy decoding and in all six under \tcd.
+
+\emph{(ii) Temporal localisation is a learned prior.}
+\crashlogic{} raises mean temporal IoU from $0.012$ to $0.373$---but it emits exactly two crash windows, $[2,3]$\,s or $[3,4]$\,s, and its predicted start time is uncorrelated with the true start (Spearman $\rho{=}0.009$, $p{=}0.91$).
+A constant $[3,4]$\,s window scores tIoU $0.408$, higher than any model.
+Because frames are supplied without absolute time stamps, the model has no signal from which to localise and instead reproduces the training-set marginal---a shortcut in the sense of Geirhos~\emph{et al.}~\cite{geirhos2020shortcut}.
+Reporting tIoU without such a baseline, as prior accident-VLM work does, overstates temporal competence.
+
+\emph{(iii) Temporal contrastive decoding does not repair the residue.}
+At $\alpha{=}0.5$, \tcd{} changes no metric significantly (paired Wilcoxon $p\geq0.21$ on all nine metrics; NLI-Score $\Delta{=}{+}0.062$, 95\% CI $[-0.034,+0.156]$).
+At $\alpha\geq1.5$ it significantly \emph{increases} hallucination and omission and lowers ROUGE-L.
+We give a mechanistic account: a reversed-frame negative preserves every order-invariant cue---vehicle colour, weather, agent identity---so the logit difference cannot discriminate the errors that dominate the residual (wrong agent, wrong severity), and a model that has not learned to use frame order receives almost no contrast signal on timing.
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item A held-out, leakage-checked evaluation protocol for dense crash explanation on CCD that scores omission and hallucination separately, includes prior-only temporal baselines, and reports paired statistics over per-video scores.
+  \item \crashlogic{}, a QLoRA adaptation of Qwen2.5-VL-7B that is the strongest system on every completeness metric, together with the finding that it leaves hallucination untouched.
+  \item A field-level decomposition of hallucination (timestamp, severity, agent colour) with an automatic error taxonomy in the appendix.
+  \item A paired evaluation of temporal contrastive decoding on this task, including a negative result with a mechanistic explanation and a demonstration that the collision prior worsens under contrast.
+  \item Release of all model outputs, per-video scores, and regeneration scripts.
+\end{itemize}
+
+We deliberately place severity classification, structured-field accuracy, and human Likert studies outside the main results: the first two appear only as components of the hallucination analysis, and the third we could not complete at the scale a reviewer should demand (Section~\ref{sec:limitations}).
+The system diagram is Figure~\ref{fig:pipeline}.

@@ -62,6 +62,10 @@ python -m crashx.run_journal_experiments --tables-only
 
 **Main paper tables (explanation-only):** [`results/tables/explanation/all_explanation_tables.md`](results/tables/explanation/all_explanation_tables.md)
 
+**Guide presentation briefing (full explanation of method, metrics, parameters, all tables):** [`GUIDE_PRESENTATION_BRIEFING.md`](GUIDE_PRESENTATION_BRIEFING.md)
+
+IEEE Overleaf package: [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip) · sources: [`paper/ieee_crashx/`](paper/ieee_crashx/)
+
 Full documentation: [`results/paper/00_INDEX.md`](results/paper/00_INDEX.md) · Narrative: [`results/paper/15_EXPLANATION_ONLY_PAPER.md`](results/paper/15_EXPLANATION_ONLY_PAPER.md)
 
 ---
