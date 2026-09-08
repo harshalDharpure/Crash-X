@@ -44,3 +44,12 @@ ACCESS_latex_template_20240429/*.blg
 ACCESS_latex_template_20240429/*.log
 ACCESS_latex_template_20240429/*.out
 ACCESS_latex_template_20240429/*.synctex.gz
+ACCESS_latex_template_20240429/build*.log
+ACCESS_latex_template_20240429/figures/_build/
+ACCESS_latex_template_20240429/figures/*.log
+paper/ieee_crashx/*.aux
+paper/ieee_crashx/*.log
+paper/ieee_crashx/*.blg
+paper/ieee_crashx/*.out
+ACCESS_latex_template_20240429/crashx_access.pdf
+paper/ieee_crashx/main.pdf

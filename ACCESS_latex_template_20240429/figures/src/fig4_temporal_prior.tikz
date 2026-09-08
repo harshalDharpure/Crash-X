@@ -1,10 +1,8 @@
-\begin{figure}[!t]
-\centering
 \begin{tikzpicture}
 \begin{axis}[
   ybar,
   bar width=9pt,
-  width=\columnwidth,
+  width=\figwidth,
   height=5.0cm,
   ylabel={Crash videos ($n{=}141$)},
   xlabel={Crash-window start time (s)},
@@ -32,6 +30,3 @@
 \legend{Ground truth, \crashlogic{} greedy, \crashlogic{} + \tcd{}$_{0.5}$}
 \end{axis}
 \end{tikzpicture}
-\caption{The temporal prior. Ground-truth crash starts span the whole clip; the adapted model predicts only $2$\,s or $3$\,s, always with a 1-second window, matching the two most frequent training windows. Predicted and true starts are uncorrelated (Spearman $\rho{=}0.009$ greedy, $0.028$ \tcd), and a constant $[3,4]$\,s window scores higher tIoU than either system (Table~\ref{tab:e3}).}
-\label{fig:prior}
-\end{figure}

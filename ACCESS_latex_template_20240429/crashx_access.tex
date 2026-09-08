@@ -11,10 +11,10 @@
 \usepackage{multirow}
 \usepackage{array}
 \usepackage{url}
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.17}
+% NOTE: do not load tikz/pgfplots here. They patch the output routine, which
+% collides with the ltxgrid output routine in ieeeaccess.cls and emits a blank
+% page after nearly every page. The three picture figures are pre-rendered to
+% PDF by figures/render_figures.sh and included with \includegraphics.
 \usepackage{enumitem}
 \setlist{nosep,leftmargin=*}
 
@@ -30,6 +30,27 @@
 \SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
 \renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
 \makeatother
+
+% ieeeaccess.cls numbers \paragraph as "a:", "b:", ... which reads as a list
+% rather than a heading. This paper uses \paragraph purely as a run-in topic
+% heading, so restore the unnumbered run-in form.
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.6ex \@plus 1ex \@minus .2ex}%
+  {-0.6em}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+
+% ieeeaccess.cls bundles Times, Formata and Courier without small-caps or
+% slanted shapes, so \textsc silently degrades to upright roman. Point the
+% missing shapes at the standard PostScript equivalents. Declared at
+% begin-document so the class's own .fd files cannot overwrite them.
+\AtBeginDocument{%
+  \DeclareFontShape{T1}{times}{m}{sc}{<->ssub*ptm/m/sc}{}%
+  \DeclareFontShape{T1}{times}{n}{sc}{<->ssub*ptm/m/sc}{}%
+  \DeclareFontShape{T1}{formata}{m}{sc}{<->ssub*formata/m/n}{}%
+  \DeclareFontShape{T1}{formata}{m}{sl}{<->ssub*formata/m/it}{}%
+}
 
 % Shorthands
 \newcommand{\crashlogic}{CrashLogic-7B}
