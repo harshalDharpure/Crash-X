@@ -7,7 +7,9 @@
 
 **CrashX: Fine-Tuning and Evaluating Video Language Models for Traffic Accident Explanation**
 
-Research code, evaluation protocol, and IEEE draft for dense **dashcam accident explanation** on the Car Crash Dataset (CCD).
+Research code, evaluation protocol, and IEEE draft for dense **dashcam accident explanation** on **CrashX-1500**, our own human-annotated crash explanation dataset.
+
+> **About the data:** the raw video (1,500 five-second dashcam clips) comes from the public Car Crash Dataset (CCD), which ships anticipation labels only. **Every forensic annotation we train and evaluate on — severity, vehicles by colour and type, impact geometry, crash window, weather, camera view, ambiguity note, and the multi-sentence explanation — was written from scratch by our human annotators** and is released here as [`Car_Crash_Text_Dataset_ground_truth.xlsx`](Car_Crash_Text_Dataset_ground_truth.xlsx) (1,500 rows × 11 columns, 143,968 words of explanation text).
 
 > **Core finding:** QLoRA adaptation of Qwen2.5-VL-7B (**CrashLogic-7B**) sharply reduces *omissions* and improves lexical metrics, but does **not** reduce *hallucinations*. Apparent timestamp accuracy is largely a **dataset prior**. Mild Temporal Contrastive Decoding (TCD / SEASON-style) is not significant under paired tests; strong contrast can hurt.
 
@@ -15,8 +17,10 @@ Research code, evaluation protocol, and IEEE draft for dense **dashcam accident 
 |----------|------|
 | GitHub | https://github.com/harshalDharpure/Crash-X |
 | Guide presentation briefing (full walkthrough) | [`GUIDE_PRESENTATION_BRIEFING.md`](GUIDE_PRESENTATION_BRIEFING.md) |
-| IEEE Overleaf zip | [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip) |
-| IEEE LaTeX sources | [`paper/ieee_crashx/`](paper/ieee_crashx/) |
+| **IEEE Access Overleaf zip (current target)** | [`ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip`](ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip) |
+| IEEE Access LaTeX sources | [`ACCESS_latex_template_20240429/`](ACCESS_latex_template_20240429/) |
+| IEEE conference Overleaf zip | [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip) |
+| IEEE conference LaTeX sources | [`paper/ieee_crashx/`](paper/ieee_crashx/) |
 | Paper notes / older tables | [`results/paper/00_INDEX.md`](results/paper/00_INDEX.md) |
 | Cite this repo | [`CITATION.cff`](CITATION.cff) |
 
@@ -24,7 +28,8 @@ Research code, evaluation protocol, and IEEE draft for dense **dashcam accident 
 
 ## Highlights
 
-1. **Omission vs hallucination** scored separately (`C_O`, `C_H`) on structured CCD fields.
+0. **CrashX-1500**: 1,500 clips annotated in-house with a nine-field forensic schema plus a ~96-word causal explanation each.
+1. **Omission vs hallucination** scored separately (`C_O`, `C_H`) on those structured fields.
 2. **CrashLogic-7B**: QLoRA fine-tune of Qwen2.5-VL-7B on 1,198 training clips.
 3. **Temporal prior diagnosis**: constant-window baselines beat the model on tIoU; predicted start ≈ uncorrelated with GT.
 4. **TCD / SEASON ablation** with paired Wilcoxon + bootstrap CIs on 150 test videos.
@@ -58,8 +63,12 @@ Crash-X/
 │   ├── inference/                   # Greedy + TCD / SEASON
 │   ├── eval/                        # Lexical, NLI, ArgusCost, stats
 │   └── run_*.py                     # Experiment entry points
+├── ACCESS_latex_template_20240429/  # IEEE Access version (current submission target)
+│   ├── crashx_access.tex            # Main file
+│   ├── CrashX_IEEE_Access_Overleaf.zip
+│   └── sections/ tables/ figures/
 ├── paper/
-│   ├── CrashX_IEEE_Overleaf.zip     # Upload to Overleaf
+│   ├── CrashX_IEEE_Overleaf.zip     # IEEE conference version
 │   └── ieee_crashx/                 # LaTeX sources
 ├── results/                         # Predictions, metrics, paper notes
 ├── scripts/                         # Pipeline shell scripts
@@ -88,7 +97,7 @@ pip install -e .
 
 | Asset | Location | Notes |
 |-------|----------|-------|
-| Ground-truth Excel | `Car_Crash_Text_Dataset_ground_truth.xlsx` | In repo |
+| Ground-truth Excel (**our annotations**) | `Car_Crash_Text_Dataset_ground_truth.xlsx` | In repo, 1,500 × 11 |
 | Videos | `video1500/000001.mp4` … `0001500.mp4` | **Not** in GitHub (~825MB). Obtain CCD videos separately |
 | Splits | `crashx/data/splits/{train,val,test}.jsonl` | 1198 / 150 / 150, seed 42 |
 
@@ -133,9 +142,16 @@ Metrics implemented under `crashx/eval/`: BLEU/ROUGE/METEOR/CIDEr/BERTScore, tIo
 
 ## Paper
 
-1. Download [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip)
+**IEEE Access (current target)**
+
+1. Download [`ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip`](ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip)
 2. Overleaf → New Project → Upload Project
-3. Main file: `main.tex`, compiler: **pdfLaTeX**, recompile twice
+3. Main file: `crashx_access.tex`, compiler: **pdfLaTeX**, recompile twice (BibTeX in between)
+
+**IEEE conference version**
+
+1. Download [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip)
+2. Main file: `main.tex`, compiler: **pdfLaTeX**, recompile twice
 
 Sources live in [`paper/ieee_crashx/`](paper/ieee_crashx/).  
 Presentation / viva briefing: [`GUIDE_PRESENTATION_BRIEFING.md`](GUIDE_PRESENTATION_BRIEFING.md).
@@ -166,7 +182,8 @@ CCD; Qwen2.5-VL; ARGUS (omission/hallucination framing); SEASON / VCD (contrasti
 ## License
 
 Code is released under the [MIT License](LICENSE).  
-Dataset videos and original CCD annotations remain under their respective licenses — redistribute only what you have rights to.
+The **CrashX-1500 annotations** in `Car_Crash_Text_Dataset_ground_truth.xlsx` are our own work and are released with this repository.  
+The underlying **CCD videos** are not ours and are not redistributed here; obtain them from the original CCD release under its own license.
 
 ---
 

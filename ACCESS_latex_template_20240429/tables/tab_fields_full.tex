@@ -1,0 +1,28 @@
+\begin{table*}[!t]
+\centering
+\caption{Field-level conflict and omission rates for all systems (supplement to Table~\ref{tab:fields}).}
+\label{tab:fields-full}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}l ccccc c | cccccc@{}}
+\toprule
+ & \multicolumn{5}{c}{\textbf{Conflict rate (\%)}} & \textbf{Colour-} & \multicolumn{6}{c}{\textbf{Omission rate (\%)}} \\
+\textbf{System} & Window & Severity & Weather & Impact & Vehicle & \textbf{disjoint (\%)} & Window & Severity & Weather & Impact & Vehicle & Expl. \\
+\midrule
+ZS Qwen2.5-VL-7B        & 26.0 & 9.3  & 14.0 & 20.0 & 5.3 & 14.2 (33) & 98.0 & 24.7 & 84.0 & 32.7 & 19.3 & 7.3 \\
+ZS Qwen2.5-VL-3B        & 37.3 & 28.7 & 13.3 & 19.3 & 4.0 & 18.4 (40) & 99.3 & 22.7 & 81.3 & 24.0 & 8.7  & 0.7 \\
+ZS Qwen2-VL-2B          & 8.7  & 21.3 & 6.7  & 6.0  & 2.7 & 0.7 (17)  & 100  & 60.0 & 86.0 & 62.7 & 42.7 & 0.7 \\
+ZS LLaVA-NeXT-Video-7B  & 45.3 & 57.3 & 58.7 & 11.3 & 2.7 & 7.1 (20)  & 96.7 & 0.7  & 70.7 & 19.3 & 2.7  & 0.7 \\
+\midrule
+\crashlogic{} (greedy)  & 42.7 & 54.0 & 12.0 & 0.7 & 2.0 & 21.3 (22) & 42.7 & 0.0 & 12.0 & 0.7 & 2.0 & 0.0 \\
+\;\tcd{} $\alpha{=}0.5$ (reverse) & 40.0 & 51.3 & 12.7 & 0.7 & 1.3 & 20.6 (21) & 40.0 & 0.0 & 12.7 & 0.7 & 1.3 & 0.0 \\
+\;\tcd{} $\alpha{=}1.0$ (reverse) & 42.7 & 53.3 & 11.3 & 2.0 & 4.0 & 20.6 (21) & 42.7 & 0.0 & 11.3 & 2.0 & 4.7 & 0.0 \\
+\;\tcd{} $\alpha{=}1.5$ (reverse) & 45.3 & 57.3 & 12.7 & 2.7 & 4.0 & 27.0 (28) & 45.3 & 0.0 & 12.7 & 4.0 & 6.0 & 0.0 \\
+\;\tcd{} $\alpha{=}2.0$ (reverse) & 44.0 & 60.0 & 12.0 & 2.7 & 4.0 & 29.8 (31) & 44.7 & 0.0 & 12.0 & 6.0 & 7.3 & 0.0 \\
+\;\tcd{} $\alpha{=}0.5$ (shuffle) & 40.7 & 55.3 & 13.3 & 2.7 & 2.7 & 23.4 (24) & 40.7 & 0.0 & 13.3 & 4.0 & 4.7 & 0.0 \\
+\;SEASON (full)                   & 45.3 & 55.3 & 12.7 & 2.7 & 3.3 & 23.4 (24) & 45.3 & 0.0 & 12.7 & 3.3 & 3.3 & 0.0 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

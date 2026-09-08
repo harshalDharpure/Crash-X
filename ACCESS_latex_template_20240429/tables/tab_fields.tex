@@ -1,0 +1,19 @@
+\begin{table*}[!t]
+\centering
+\caption{Where hallucinations concentrate ($n{=}150$). \emph{Conflict} rate (\%): field asserted and wrong (window: tIoU $<0.1$). \emph{Colour-disjoint}: output names a vehicle colour that never appears in the ground truth (141 crash videos; parentheses: rate among videos that name any colour). Window and severity dominate; colour errors stay flat under mild \tcd{} (P1). Full field-wise rates are in Table~\ref{tab:fields-full}.}
+\label{tab:fields}
+\small
+\setlength{\tabcolsep}{10pt}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{}}
+\toprule
+\textbf{System} & \textbf{Window} & \textbf{Severity} & \textbf{Colour-disjoint} & \textbf{Weather} \\
+\midrule
+ZS Qwen2.5-VL-7B        & 26.0 & 9.3  & 14.2 (33) & 14.0 \\
+ZS LLaVA-NeXT-Video-7B  & 45.3 & 57.3 & 7.1 (20)  & 58.7 \\
+\midrule
+\crashlogic{} (greedy)  & 42.7 & 54.0 & 21.3 (22) & 12.0 \\
+\crashlogic{} + \tcd{} $\alpha{=}0.5$ & 40.0 & 51.3 & 20.6 (21) & 12.7 \\
+\crashlogic{} + \tcd{} $\alpha{=}2.0$ & 44.0 & 60.0 & 29.8 (31) & 12.0 \\
+\bottomrule
+\end{tabular*}
+\end{table*}

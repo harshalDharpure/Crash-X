@@ -1,0 +1,23 @@
+\begin{table*}[!t]
+\centering
+\caption{Entailment of model outputs by the forensic ground truth ($n{=}150$; cross-encoder NLI~\cite{he2023debertav3}, premise = structured fields + reference Explanation). \emph{NLI} uses the extracted Explanation as hypothesis; \emph{Full-NLI} uses the entire output and is independent of field extraction. NLI-Score $=P_e{-}P_c$ ($\uparrow$); NLI-Loss $=-\log P_e$ ($\downarrow$). 95\% bootstrap intervals in brackets. Best per column in \textbf{bold}.}
+\label{tab:e2}
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccc|cc@{}}
+\toprule
+ & \multicolumn{5}{c|}{\textbf{NLI (Explanation as hypothesis)}} & \multicolumn{2}{c}{\textbf{Full-NLI (whole output)}} \\
+\textbf{System} & $P_e\uparrow$ & $P_c\downarrow$ & $P_n$ & \textbf{Score}$\uparrow$ & \textbf{Loss}$\downarrow$ & $P_e\uparrow$ & \textbf{Score}$\uparrow$ \\
+\midrule
+ZS Qwen2.5-VL-7B        & 0.139 & \textbf{0.092} & 0.769 & 0.047 $[-.019,.110]$ & 3.811 & 0.128 & 0.076 $[.028,.130]$ \\
+ZS Qwen2.5-VL-3B        & 0.145 & 0.056 & 0.799 & 0.089 $[.040,.138]$ & 3.562 & 0.152 & 0.111 $[.064,.159]$ \\
+ZS Qwen2-VL-2B          & 0.092 & 0.099 & 0.809 & $-$0.007 $[-.066,.050]$ & 4.462 & 0.099 & 0.005 $[-.055,.062]$ \\
+ZS LLaVA-NeXT-Video-7B  & 0.157 & 0.061 & 0.782 & \textbf{0.097} $[.041,.155]$ & 3.464 & 0.153 & 0.092 $[.035,.151]$ \\
+\midrule
+\crashlogic{} (greedy)                  & 0.224 & 0.229 & 0.548 & $-$0.005 $[-.092,.090]$ & 3.124 & \textbf{0.402} & \textbf{0.247} $[.156,.333]$ \\
+\crashlogic{} + \tcd{} ($\alpha{=}0.5$) & 0.249 & 0.193 & 0.558 & 0.057 $[-.031,.146]$ & \textbf{2.944} & 0.395 & 0.234 $[.134,.327]$ \\
+\crashlogic{} + \tcd{} ($\alpha{=}1.0$) & \textbf{0.276} & 0.186 & 0.538 & 0.090 $[.003,.180]$ & 2.954 & 0.386 & 0.237 $[.142,.325]$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

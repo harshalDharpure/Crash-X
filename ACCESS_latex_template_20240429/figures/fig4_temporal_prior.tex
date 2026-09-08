@@ -1,0 +1,36 @@
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  ybar,
+  bar width=9pt,
+  width=\columnwidth,
+  height=5.0cm,
+  ylabel={Crash videos ($n{=}141$)},
+  xlabel={Crash-window start time (s)},
+  symbolic x coords={$[0,1)$,$[1,2)$,$[2,3)$,$[3,4)$,$[4,5]$},
+  xtick=data,
+  x tick label style={font=\scriptsize},
+  legend style={at={(0.02,0.98)}, anchor=north west, font=\scriptsize, draw=none, fill=none},
+  ymin=0, ymax=100,
+  enlarge x limits=0.15,
+  grid=major,
+  major grid style={dotted,gray!40},
+  nodes near coords,
+  every node near coord/.append style={font=\tiny},
+]
+\addplot[fill=gray!45, draw=gray!70] coordinates {
+  ($[0,1)$,5) ($[1,2)$,19) ($[2,3)$,65) ($[3,4)$,48) ($[4,5]$,4)
+};
+\addplot[fill=blue!55, draw=blue!80] coordinates {
+  ($[0,1)$,0) ($[1,2)$,0) ($[2,3)$,88) ($[3,4)$,53) ($[4,5]$,0)
+};
+\addplot[fill=orange!65, draw=orange!90] coordinates {
+  ($[0,1)$,0) ($[1,2)$,0) ($[2,3)$,93) ($[3,4)$,48) ($[4,5]$,0)
+};
+\legend{Ground truth, \crashlogic{} greedy, \crashlogic{} + \tcd{}$_{0.5}$}
+\end{axis}
+\end{tikzpicture}
+\caption{The temporal prior. Ground-truth crash starts span the whole clip; the adapted model predicts only $2$\,s or $3$\,s, always with a 1-second window, matching the two most frequent training windows. Predicted and true starts are uncorrelated (Spearman $\rho{=}0.009$ greedy, $0.028$ \tcd), and a constant $[3,4]$\,s window scores higher tIoU than either system (Table~\ref{tab:e3}).}
+\label{fig:prior}
+\end{figure}

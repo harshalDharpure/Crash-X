@@ -35,3 +35,12 @@ outputs/crashlogic_7b_lora_f16/
 # OS
 .DS_Store
 Thumbs.db
+
+# IEEE Access: pristine template download (redundant copy) and build artifacts
+ACCESS_latex_template_20240429/ACCESS_latex_template_20240429/
+ACCESS_latex_template_20240429/*.aux
+ACCESS_latex_template_20240429/*.bbl
+ACCESS_latex_template_20240429/*.blg
+ACCESS_latex_template_20240429/*.log
+ACCESS_latex_template_20240429/*.out
+ACCESS_latex_template_20240429/*.synctex.gz

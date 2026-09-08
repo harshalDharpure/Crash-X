@@ -1,0 +1,27 @@
+\begin{table*}[!t]
+\centering
+\caption{Paired comparisons on aligned per-video scores ($n{=}150$): mean difference (second system minus first), paired-bootstrap 95\% CI (5{,}000 resamples), two-sided Wilcoxon signed-rank $p$. Arrows give the desired direction. Significant results ($p<0.05$) in \textbf{bold}. Adaptation is significant on every completeness metric, non-significant on \Hcost{}, and significantly \emph{worse} on NLI contradiction mass. Every \tcd{} result at $\alpha{=}0.5$ is non-significant; every significant \tcd{} result at $\alpha{=}2.0$ is a degradation. Remaining variants are in Table~\ref{tab:ho} and Table~\ref{tab:e4}.}
+\label{tab:paired}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}l ccc ccc ccc@{}}
+\toprule
+ & \multicolumn{3}{c}{\textbf{ZS Qwen2.5-VL-7B $\to$ \crashlogic{} greedy}} & \multicolumn{3}{c}{\textbf{Greedy $\to$ \tcd{} $\alpha{=}0.5$ (reverse)}} & \multicolumn{3}{c}{\textbf{Greedy $\to$ \tcd{} $\alpha{=}2.0$ (reverse)}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+\textbf{Metric} & $\Delta$ & 95\% CI & $p$ & $\Delta$ & 95\% CI & $p$ & $\Delta$ & 95\% CI & $p$ \\
+\midrule
+BLEU-4 (per-video)$\uparrow$ & \textbf{$+$0.108} & $[+.098,+.117]$ & $\mathbf{<10^{-4}}$ & $+$0.000 & $[-.009,+.009]$ & 0.44 & $-$0.009 & $[-.019,+.000]$ & 0.14 \\
+ROUGE-L$\uparrow$            & \textbf{$+$0.176} & $[+.163,+.189]$ & $\mathbf{<10^{-4}}$ & $+$0.003 & $[-.005,+.011]$ & 0.22 & \textbf{$-$0.016} & $[-.026,-.006]$ & $\mathbf{0.005}$ \\
+tIoU$\uparrow$               & \textbf{$+$0.360} & $[+.297,+.426]$ & $\mathbf{<10^{-4}}$ & $+$0.021 & $[-.044,+.084]$ & 0.58 & $-$0.017 & $[-.083,+.046]$ & 0.58 \\
+\Ocost{} (omission)$\downarrow$ & \textbf{$-$0.356} & $[-.382,-.328]$ & $\mathbf{<10^{-4}}$ & $-$0.004 & $[-.017,+.008]$ & 0.48 & \textbf{$+$0.021} & $[+.002,+.040]$ & $\mathbf{0.026}$ \\
+\midrule
+\Hcost{} (hallucination)$\downarrow$ & $-$0.005 & $[-.051,+.041]$ & 0.81 & $-$0.011 & $[-.027,+.005]$ & 0.21 & \textbf{$+$0.030} & $[+.005,+.057]$ & $\mathbf{0.031}$ \\
+NLI $P_e$$\uparrow$          & \textbf{$+$0.084} & $[+.019,+.148]$ & $\mathbf{0.007}$ & $+$0.026 & $[-.029,+.080]$ & 0.24 & $-$0.005 & $[-.063,+.055]$ & 0.51 \\
+NLI $P_c$$\downarrow$        & \textbf{$+$0.137} & $[+.069,+.203]$ & $\mathbf{<10^{-4}}$ & $-$0.036 & $[-.094,+.022]$ & 0.94 & $-$0.027 & $[-.089,+.034]$ & 0.58 \\
+NLI-Score$\uparrow$          & $-$0.052 & $[-.162,+.055]$ & 0.41 & $+$0.062 & $[-.034,+.156]$ & 0.44 & $+$0.021 & $[-.075,+.119]$ & 0.91 \\
+Full-NLI-Score$\uparrow$     & \textbf{$+$0.170} & $[+.077,+.269]$ & $\mathbf{0.0005}$ & $-$0.012 & $[-.104,+.081]$ & 0.77 & \textbf{$-$0.098} & $[-.186,-.013]$ & $\mathbf{0.014}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

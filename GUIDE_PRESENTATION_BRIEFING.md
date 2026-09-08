@@ -51,7 +51,7 @@ These are **not** the same. Fine-tuning can fix one and leave the other.
 
 ## 3. What we did (pipeline / research steps)
 
-1. **Dataset:** Car Crash Dataset (CCD) — 1,500 five-second dashcam clips + human forensic text annotations.
+1. **Dataset:** **CrashX-1500** — we annotated 1,500 five-second dashcam clips ourselves (our human annotators wrote every forensic field and every explanation); the raw video comes from the public Car Crash Dataset (CCD).
 2. **Split:** Stratified 80/10/10 by severity → **1,198 train / 150 val / 150 test** (seed 42). Video IDs do not overlap.
 3. **Zero-shot baselines:** Run 4 open Video-LLMs with the same prompt and 8 frames.
 4. **Fine-tune:** QLoRA on Qwen2.5-VL-7B-Instruct → **CrashLogic-7B**.
@@ -69,7 +69,7 @@ These are **not** the same. Fine-tuning can fix one and leave the other.
 
 | Path | What it is |
 |------|------------|
-| `Car_Crash_Text_Dataset_ground_truth.xlsx` | Ground-truth annotations (1,500 rows) |
+| `Car_Crash_Text_Dataset_ground_truth.xlsx` | **Our own** human-written ground truth (1,500 rows × 11 columns) |
 | `video1500/` | Raw videos (local only; not on GitHub — too large) |
 | `crashx/data/splits/` | `train.jsonl`, `val.jsonl`, `test.jsonl` |
 | `crashx/` | Code: data, QLoRA train, SEASON/TCD decode, eval |
@@ -80,13 +80,45 @@ These are **not** the same. Fine-tuning can fix one and leave the other.
 
 ---
 
-## 4. Dataset (CCD) — explain this clearly
+## 4. Dataset — **CrashX-1500, we built the annotations ourselves**
 
-**Source:** Car Crash Dataset (CCD), Bao et al. (nondeterministic accident anticipation line of work).
+> This is the slide to spend time on. The dataset is our own contribution, not a download.
 
-**Clip properties:**
-- ~1,500 clips, **5 seconds**, **10 fps**
-- Human labels: severity, impact, vehicles, weather, crash window `[t_s, t_e]`, multi-sentence Explanation (~96 words on test)
+**File:** `Car_Crash_Text_Dataset_ground_truth.xlsx` (1,500 rows × 11 columns)
+
+**Two things to keep separate when you present:**
+
+| Component | Where it comes from | Who made it |
+|---|---|---|
+| The raw video (1,500 clips, 5 s, 10 fps) | Car Crash Dataset (CCD), Bao et al. — a public video release with **anticipation labels only** | Prior work, cited |
+| **All forensic text ground truth** — severity, vehicles, impact geometry, crash window, explanation, weather, camera view, ambiguity | **Written from scratch by our human annotators** | **Us** |
+
+Say it like this: *"CCD gave us video. It did not give us anything to score an explanation against. So we annotated all 1,500 clips ourselves and that annotation layer is CrashX-1500."*
+
+**What our annotators produced (9 annotated fields per clip):**
+
+| Column | What it holds | Scale |
+|---|---|---|
+| `Severity of the Crash` | minor / moderate / severe / fatal | moderate 692, minor 379, severe 301, fatal 43 |
+| `Type of Vehicles involved` | every agent by **colour and type** ("yellow car, black car") | 647 distinct strings |
+| `No. of Vehicles involved` | integer; `0` = near-miss, no collision | 2 veh: 1,228 · 3 veh: 113 · 0 veh: 83 |
+| `Location of impact` | free-text contact geometry per agent | 1,335 distinct strings |
+| `Start of Crash` / `End of Crash` | crash window in `hh:mm:ss` | 2 unparseable rows dropped |
+| `Explanation` | multi-sentence causal narrative | **96.0 ± 25.5 words**, ~5 sentences, **143,968 words total** |
+| `Weather Conditions` | normal / snowy / rainy / night / mist / cloudy | normal 941, snowy 410, rainy 122 |
+| `Camera View` | ego vehicle and the vehicle it follows | 178 distinct descriptions |
+| `Ambiguity` | annotator's explicit uncertainty note | flagged on 103 clips |
+
+**Annotation protocol (be ready for this question):**
+1. Watch each clip frame-by-frame at 10 fps.
+2. Describe **only what is visible** — no inference beyond the frame.
+3. Name agents by **colour + type**, never by role alone. *(This is what later lets us run the strict colour-disjoint hallucination check.)*
+4. Mark the window at the **first and last frame where contact is visible**.
+5. If evidence is uncertain, **write it in `Ambiguity`** rather than guessing.
+
+**Honest limitation to state before your guide asks:** each clip was annotated **once**, so we do not report inter-annotator agreement. The `Ambiguity` column (103 clips) is our partial substitute. A double-annotated, adjudicated subset is the obvious next release.
+
+**Why the schema was designed this way:** every metric in the paper is downstream of a column. Severity → severity conflict rate. Colour+type vehicles → wrong-agent check. Start/End → tIoU and the temporal-prior analysis. Explanation → BLEU/ROUGE/CIDEr/BERTScore/NLI. `No. of Vehicles = 0` → the no-crash fabrication probe.
 
 **Our split (after dropping 2 unparseable rows → 1,498):**
 
@@ -117,7 +149,7 @@ All get the **same prompt** and **same 8 frames** (≤224 px, no timestamps).
 ### 5.2 CrashLogic-7B (ours — adaptation)
 - Backbone: **Qwen2.5-VL-7B-Instruct**
 - Method: **QLoRA** (4-bit + LoRA adapters)
-- Trained on 1,198 CCD clips with structured target strings
+- Trained on 1,198 CrashX-1500 clips with structured target strings
 - Decoded **greedily** (main adapted system)
 
 ### 5.3 CrashLogic + TCD / SEASON (decode-time)
@@ -225,7 +257,7 @@ Premise = GT fields + reference Explanation; Hypothesis = model text.
 **Caveat:** Zero-shot models often say little → scored as “neutral”, not “wrong”. Adapted models make more specific claims → more contradictions. So NLI-Score alone can **reward vagueness**.
 
 ### 8.3 Omission & hallucination costs (central metrics)
-Inspired by **ARGUS** (dual cost for captions), but computed on **CCD structured fields** (deterministic, no API judge).
+Inspired by **ARGUS** (dual cost for captions), but computed on **our own CrashX-1500 structured fields** (deterministic, no API judge).
 
 | Symbol | Name | Direction | Meaning |
 |--------|------|-----------|---------|
@@ -272,7 +304,7 @@ Explain to your guide as **“standing on these works”**:
 | Topic | Papers / ideas | What we took |
 |-------|----------------|--------------|
 | Video-LLM backbones | Qwen2-VL / Qwen2.5-VL, LLaVA-NeXT-Video | Models we evaluate / fine-tune |
-| Dataset | CCD (Bao et al.) | Clips + forensic annotations |
+| Dataset | **CrashX-1500 (ours)**, on CCD video (Bao et al.) | We wrote all forensic annotations; CCD supplied the clips |
 | Omission vs hallucination | **ARGUS** | Dual-cost framing |
 | Fine-tuning can increase hallucination | Gekhman et al. (finetuning hallucinations) | Interpretation of our asymmetry |
 | Contrastive decoding | Li et al. CD; **VCD**; **SEASON** | Decode-time contrast vs a negative view |
@@ -570,7 +602,7 @@ Paper compile: upload `paper/CrashX_IEEE_Overleaf.zip` to Overleaf → `main.tex
 | `sections/00_abstract.tex` | Abstract |
 | `01_introduction.tex` | Problem + contributions |
 | `02_related_work.tex` | Prior work |
-| `03_dataset.tex` | Task, CCD, metrics definitions |
+| `03_dataset.tex` | Task, CrashX-1500 dataset + annotation protocol, metrics definitions |
 | `04_method.tex` | CrashLogic + TCD + predictions P1–P3 |
 | `05_experiments.tex` | Setup |
 | `06_results.tex` | Main quantitative results |
