@@ -9,7 +9,7 @@ Main file: **`crashx_access.tex`**. Run `./build.sh`, which does
 pdflatex → bibtex → pdflatex ×2 and then reports errors, overfull boxes,
 page count, and any blank pages.
 
-On Overleaf: upload `CrashX_IEEE_Access_Overleaf.zip` and set
+On Overleaf: upload `harshal.zip` and set
 `crashx_access.tex` as the main document.
 
 Current status: **16 pages, 0 errors, 0 blank pages.**

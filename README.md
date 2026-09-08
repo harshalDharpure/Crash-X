@@ -17,7 +17,7 @@ Research code, evaluation protocol, and IEEE draft for dense **dashcam accident 
 |----------|------|
 | GitHub | https://github.com/harshalDharpure/Crash-X |
 | Guide presentation briefing (full walkthrough) | [`GUIDE_PRESENTATION_BRIEFING.md`](GUIDE_PRESENTATION_BRIEFING.md) |
-| **IEEE Access Overleaf zip (current target)** | [`ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip`](ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip) |
+| **IEEE Access Overleaf zip (current target)** | [`ACCESS_latex_template_20240429/harshal.zip`](ACCESS_latex_template_20240429/harshal.zip) |
 | IEEE Access LaTeX sources | [`ACCESS_latex_template_20240429/`](ACCESS_latex_template_20240429/) |
 | IEEE conference Overleaf zip | [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip) |
 | IEEE conference LaTeX sources | [`paper/ieee_crashx/`](paper/ieee_crashx/) |
@@ -65,7 +65,7 @@ Crash-X/
 │   └── run_*.py                     # Experiment entry points
 ├── ACCESS_latex_template_20240429/  # IEEE Access version (current submission target)
 │   ├── crashx_access.tex            # Main file
-│   ├── CrashX_IEEE_Access_Overleaf.zip
+│   ├── harshal.zip                  # Upload to Overleaf
 │   └── sections/ tables/ figures/
 ├── paper/
 │   ├── CrashX_IEEE_Overleaf.zip     # IEEE conference version
@@ -144,7 +144,7 @@ Metrics implemented under `crashx/eval/`: BLEU/ROUGE/METEOR/CIDEr/BERTScore, tIo
 
 **IEEE Access (current target)**
 
-1. Download [`ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip`](ACCESS_latex_template_20240429/CrashX_IEEE_Access_Overleaf.zip)
+1. Download [`ACCESS_latex_template_20240429/harshal.zip`](ACCESS_latex_template_20240429/harshal.zip)
 2. Overleaf → New Project → Upload Project
 3. Main file: `crashx_access.tex`, compiler: **pdfLaTeX**, recompile twice (BibTeX in between)
 
