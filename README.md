@@ -34,8 +34,7 @@ python -m crashx.models.train_qlora \
 ```
 
 4-bit NF4, LoRA r=16, alpha=32, LR 2e-4, 5 epochs, 8 frames at most 224px.
-Adapter weights are gitignored; train locally or see
-`outputs/crashlogic_7b_lora/MODEL_WEIGHTS.md`.
+Adapter weights are gitignored; train locally to produce them.
 
 ## Inference and eval
 
