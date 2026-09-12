@@ -1,9 +1,5 @@
 # CrashX
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Paper](https://img.shields.io/badge/paper-IEEE%20draft-informational)](paper/CrashX_IEEE_Overleaf.zip)
-[![Guide](https://img.shields.io/badge/docs-guide%20briefing-success)](GUIDE_PRESENTATION_BRIEFING.md)
 
 **CrashX: Fine-Tuning and Evaluating Video Language Models for Traffic Accident Explanation**
 
@@ -12,17 +8,6 @@ Research code, evaluation protocol, and IEEE draft for dense **dashcam accident 
 > **About the data:** the raw video (1,500 five-second dashcam clips) comes from the public Car Crash Dataset (CCD), which ships anticipation labels only. **Every forensic annotation we train and evaluate on — severity, vehicles by colour and type, impact geometry, crash window, weather, camera view, ambiguity note, and the multi-sentence explanation — was written from scratch by our human annotators** and is released here as [`Car_Crash_Text_Dataset_ground_truth.xlsx`](Car_Crash_Text_Dataset_ground_truth.xlsx) (1,500 rows × 11 columns, 143,968 words of explanation text).
 
 > **Core finding:** QLoRA adaptation of Qwen2.5-VL-7B (**CrashLogic-7B**) sharply reduces *omissions* and improves lexical metrics, but does **not** reduce *hallucinations*. Apparent timestamp accuracy is largely a **dataset prior**. Mild Temporal Contrastive Decoding (TCD / SEASON-style) is not significant under paired tests; strong contrast can hurt.
-
-| Resource | Link |
-|----------|------|
-| GitHub | https://github.com/harshalDharpure/Crash-X |
-| Guide presentation briefing (full walkthrough) | [`GUIDE_PRESENTATION_BRIEFING.md`](GUIDE_PRESENTATION_BRIEFING.md) |
-| **IEEE Access Overleaf zip (current target)** | [`ACCESS_latex_template_20240429/harshal.zip`](ACCESS_latex_template_20240429/harshal.zip) |
-| IEEE Access LaTeX sources | [`ACCESS_latex_template_20240429/`](ACCESS_latex_template_20240429/) |
-| IEEE conference Overleaf zip | [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip) |
-| IEEE conference LaTeX sources | [`paper/ieee_crashx/`](paper/ieee_crashx/) |
-| Paper notes / older tables | [`results/paper/00_INDEX.md`](results/paper/00_INDEX.md) |
-| Cite this repo | [`CITATION.cff`](CITATION.cff) |
 
 ---
 
@@ -46,36 +31,6 @@ Research code, evaluation protocol, and IEEE draft for dense **dashcam accident 
 
 Hallucination cost is **not** significantly improved by adaptation (\(p=0.81\)). See the briefing for full tables.
 
----
-
-## Repository layout
-
-```text
-Crash-X/
-├── GUIDE_PRESENTATION_BRIEFING.md   # Complete guide talk notes
-├── CITATION.cff                     # Citation metadata
-├── LICENSE                          # MIT
-├── CONTRIBUTING.md
-├── REPOSITORY.md                    # Tagging, releases, maintenance
-├── crashx/                          # Python package
-│   ├── data/                        # CCD processing + splits
-│   ├── models/                      # QLoRA training
-│   ├── inference/                   # Greedy + TCD / SEASON
-│   ├── eval/                        # Lexical, NLI, ArgusCost, stats
-│   └── run_*.py                     # Experiment entry points
-├── ACCESS_latex_template_20240429/  # IEEE Access version (current submission target)
-│   ├── crashx_access.tex            # Main file
-│   ├── harshal.zip                  # Upload to Overleaf
-│   └── sections/ tables/ figures/
-├── paper/
-│   ├── CrashX_IEEE_Overleaf.zip     # IEEE conference version
-│   └── ieee_crashx/                 # LaTeX sources
-├── results/                         # Predictions, metrics, paper notes
-├── scripts/                         # Pipeline shell scripts
-├── outputs/crashlogic_7b_lora/      # LoRA config (large weights excluded)
-├── Car_Crash_Text_Dataset_ground_truth.xlsx
-└── video1500/                       # Local only (gitignored)
-```
 
 ---
 
@@ -137,45 +92,6 @@ python -m crashx.run_journal_experiments --tables-only
 ```
 
 Metrics implemented under `crashx/eval/`: BLEU/ROUGE/METEOR/CIDEr/BERTScore, tIoU, ArgusCost-H/O, NLI, paired bootstrap + Wilcoxon.
-
----
-
-## Paper
-
-**IEEE Access (current target)**
-
-1. Download [`ACCESS_latex_template_20240429/harshal.zip`](ACCESS_latex_template_20240429/harshal.zip)
-2. Overleaf → New Project → Upload Project
-3. Main file: `crashx_access.tex`, compiler: **pdfLaTeX**, recompile twice (BibTeX in between)
-
-**IEEE conference version**
-
-1. Download [`paper/CrashX_IEEE_Overleaf.zip`](paper/CrashX_IEEE_Overleaf.zip)
-2. Main file: `main.tex`, compiler: **pdfLaTeX**, recompile twice
-
-Sources live in [`paper/ieee_crashx/`](paper/ieee_crashx/).  
-Presentation / viva briefing: [`GUIDE_PRESENTATION_BRIEFING.md`](GUIDE_PRESENTATION_BRIEFING.md).
-
----
-
-## Citation
-
-If you use this code, splits, or evaluation protocol, please cite:
-
-```bibtex
-@misc{crashx2026,
-  title        = {CrashX: Fine-Tuning and Evaluating Video Language Models for Traffic Accident Explanation},
-  author       = {Dharpure, Harshal},
-  year         = {2026},
-  howpublished = {\url{https://github.com/harshalDharpure/Crash-X}},
-  note         = {Code, evaluation protocol, and IEEE draft}
-}
-```
-
-Or use GitHub’s “Cite this repository” (from [`CITATION.cff`](CITATION.cff)).
-
-### Related work we build on
-CCD; Qwen2.5-VL; ARGUS (omission/hallucination framing); SEASON / VCD (contrastive decoding); TimeChat / VTimeLLM / LITA (time-aware VLMs). Full bibliography: `paper/ieee_crashx/refs.bib`.
 
 ---
 
