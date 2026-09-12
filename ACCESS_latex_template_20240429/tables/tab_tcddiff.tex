@@ -1,0 +1,20 @@
+\begin{table*}[!t]
+\centering
+\caption{How far each decoding variant moves from the greedy output on the same video ($n{=}150$). \emph{Window / Severity / Vehicles changed}: fraction of videos on which the parsed field differs from greedy. \emph{R-L to greedy}: ROUGE-L between the variant's and greedy's Explanation (the free text is rewritten on 100\% of videos for every variant). \emph{Window fixed / broken}: window conflicts (tIoU $<0.1$) removed / introduced relative to greedy's 64.}
+\label{tab:tcddiff}
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Variant} & \textbf{Window} & \textbf{Severity} & \textbf{Vehicles} & \textbf{R-L to} & \textbf{Window} \\
+ & \textbf{changed} & \textbf{changed} & \textbf{changed} & \textbf{greedy} & \textbf{fixed / broken} \\
+\midrule
+\tcd{} $\alpha{=}0.5$ (reverse) & 0.29 & 0.10 & 0.39 & 0.48 & 16 / 12 \\
+\tcd{} $\alpha{=}1.0$ (reverse) & 0.35 & 0.19 & 0.50 & 0.47 & 17 / 17 \\
+\tcd{} $\alpha{=}1.5$ (reverse) & 0.39 & 0.28 & 0.59 & 0.43 & 15 / 19 \\
+\tcd{} $\alpha{=}2.0$ (reverse) & 0.41 & 0.32 & 0.62 & 0.42 & 15 / 17 \\
+\tcd{} $\alpha{=}0.5$ (shuffle) & 0.29 & 0.23 & 0.54 & 0.46 & 13 / 10 \\
+SEASON (full)                   & 0.27 & 0.17 & 0.53 & 0.47 & 10 / 14 \\
+\bottomrule
+\end{tabular}
+\end{table*}

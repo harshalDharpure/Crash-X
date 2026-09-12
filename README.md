@@ -1,60 +1,21 @@
 # CrashX
 
+Code and evaluation for dense dashcam accident explanation.
 
-**CrashX: Fine-Tuning and Evaluating Video Language Models for Traffic Accident Explanation**
-
-Research code, evaluation protocol, and IEEE draft for dense **dashcam accident explanation** on **CrashX-1500**, our own human-annotated crash explanation dataset.
-
-> **About the data:** the raw video (1,500 five-second dashcam clips) comes from the public Car Crash Dataset (CCD), which ships anticipation labels only. **Every forensic annotation we train and evaluate on — severity, vehicles by colour and type, impact geometry, crash window, weather, camera view, ambiguity note, and the multi-sentence explanation — was written from scratch by our human annotators** and is released here as [`Car_Crash_Text_Dataset_ground_truth.xlsx`](Car_Crash_Text_Dataset_ground_truth.xlsx) (1,500 rows × 11 columns, 143,968 words of explanation text).
-
-> **Core finding:** QLoRA adaptation of Qwen2.5-VL-7B (**CrashLogic-7B**) sharply reduces *omissions* and improves lexical metrics, but does **not** reduce *hallucinations*. Apparent timestamp accuracy is largely a **dataset prior**. Mild Temporal Contrastive Decoding (TCD / SEASON-style) is not significant under paired tests; strong contrast can hurt.
-
----
-
-## Highlights
-
-0. **CrashX-1500**: 1,500 clips annotated in-house with a nine-field forensic schema plus a ~96-word causal explanation each.
-1. **Omission vs hallucination** scored separately (`C_O`, `C_H`) on those structured fields.
-2. **CrashLogic-7B**: QLoRA fine-tune of Qwen2.5-VL-7B on 1,198 training clips.
-3. **Temporal prior diagnosis**: constant-window baselines beat the model on tIoU; predicted start ≈ uncorrelated with GT.
-4. **TCD / SEASON ablation** with paired Wilcoxon + bootstrap CIs on 150 test videos.
-5. Release of splits, predictions, metrics scripts, and Overleaf-ready paper package.
-
-### Snapshot (150-video test set)
-
-| System | BLEU-4 ↑ | BERTScore ↑ | C_O ↓ | C_H ↓ | tIoU ↑ |
-|--------|----------|-------------|-------|-------|--------|
-| Zero-shot Qwen2.5-VL-7B | 0.016 | 0.486 | 0.462 | 0.227 | 0.012 |
-| **CrashLogic-7B (greedy)** | **0.142** | **0.686** | **0.107** | 0.223 | 0.373 |
-| CrashLogic + TCD α=0.5 | 0.142 | 0.686 | 0.102 | 0.212 | 0.394 |
-| Constant window `[3,4]`s | — | — | — | — | **0.408** |
-
-Hallucination cost is **not** significantly improved by adaptation (\(p=0.81\)). See the briefing for full tables.
-
-
----
-
-## Installation
-
-```bash
-git clone https://github.com/harshalDharpure/Crash-X.git
-cd Crash-X
-python -m venv .venv && source .venv/bin/activate
-pip install -r crashx/requirements.txt
-pip install -e .
-```
-
-**Requirements:** Python ≥ 3.10, CUDA GPU recommended for training/inference (A100-40GB used in the paper).
-
----
+We fine-tune Qwen2.5-VL-7B with QLoRA (CrashLogic-7B) and score explanations for
+omission vs hallucination, temporal grounding, and NLI faithfulness. Main finding:
+adaptation cuts omissions a lot, but hallucination cost barely moves; the strong
+tIoU numbers are mostly a dataset prior.
 
 ## Data
 
-| Asset | Location | Notes |
-|-------|----------|-------|
-| Ground-truth Excel (**our annotations**) | `Car_Crash_Text_Dataset_ground_truth.xlsx` | In repo, 1,500 × 11 |
-| Videos | `video1500/000001.mp4` … `0001500.mp4` | **Not** in GitHub (~825MB). Obtain CCD videos separately |
-| Splits | `crashx/data/splits/{train,val,test}.jsonl` | 1198 / 150 / 150, seed 42 |
+`Car_Crash_Text_Dataset_ground_truth.xlsx` is our annotation layer (CrashX-1500):
+1,500 clips with severity, vehicles, impact, crash window, weather, camera view,
+ambiguity notes, and multi-sentence explanations written by human annotators.
+
+The raw videos come from the public Car Crash Dataset (CCD). Put them under
+`video1500/` locally (not in this repo). Splits are already in
+`crashx/data/splits/` (1198 / 150 / 150, seed 42).
 
 ```bash
 python -m crashx.data.process_ccd \
@@ -63,9 +24,28 @@ python -m crashx.data.process_ccd \
   --out-dir crashx/data/splits
 ```
 
----
+## Layout
 
-## Training (CrashLogic-7B)
+```text
+crashx/                              training, inference, eval
+ACCESS_latex_template_20240429/      IEEE Access paper (harshal.zip for Overleaf)
+results/                             predictions and metric dumps
+scripts/                             experiment shell scripts
+outputs/crashlogic_7b_lora/          LoRA config (large weights gitignored)
+Car_Crash_Text_Dataset_ground_truth.xlsx
+```
+
+## Setup
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r crashx/requirements.txt
+pip install -e .
+```
+
+Needs Python 3.10+ and a CUDA GPU for training/inference.
+
+## Train
 
 ```bash
 python -m crashx.models.train_qlora \
@@ -74,36 +54,35 @@ python -m crashx.models.train_qlora \
   --output-dir outputs/crashlogic_7b_lora
 ```
 
-Key settings: 4-bit NF4, LoRA \(r{=}16\), \(\alpha{=}32\), LR \(2{\times}10^{-4}\), 5 epochs, 8 frames @ ≤224px.  
-Large `adapter_model.safetensors` is gitignored — train locally or see `outputs/crashlogic_7b_lora/MODEL_WEIGHTS.md`.
+4-bit NF4, LoRA r=16, alpha=32, LR 2e-4, 5 epochs, 8 frames at most 224px.
+Adapter weights are gitignored; train locally or see
+`outputs/crashlogic_7b_lora/MODEL_WEIGHTS.md`.
 
----
-
-## Inference & evaluation
+## Inference and eval
 
 ```bash
-# Main systems (greedy / TCD / SEASON)
 python -m crashx.run_experiments \
   --lora-path outputs/crashlogic_7b_lora \
   --results-dir results
 
-# Extra baselines / table regeneration
 python -m crashx.run_journal_experiments --tables-only
 ```
 
-Metrics implemented under `crashx/eval/`: BLEU/ROUGE/METEOR/CIDEr/BERTScore, tIoU, ArgusCost-H/O, NLI, paired bootstrap + Wilcoxon.
+Eval code is under `crashx/eval/` (BLEU/ROUGE/METEOR/CIDEr/BERTScore, tIoU,
+ArgusCost H/O, NLI, bootstrap + Wilcoxon).
 
----
+## Snapshot (n=150 test)
 
-## License
+| System | BLEU-4 | BERTScore | C_O | C_H | tIoU |
+|--------|--------|-----------|-----|-----|------|
+| Zero-shot Qwen2.5-VL-7B | 0.016 | 0.486 | 0.462 | 0.227 | 0.012 |
+| CrashLogic-7B (greedy) | 0.142 | 0.686 | 0.107 | 0.223 | 0.373 |
+| CrashLogic + TCD a=0.5 | 0.142 | 0.686 | 0.102 | 0.212 | 0.394 |
+| Constant window [3,4]s | — | — | — | — | 0.408 |
 
-Code is released under the [MIT License](LICENSE).  
-The **CrashX-1500 annotations** in `Car_Crash_Text_Dataset_ground_truth.xlsx` are our own work and are released with this repository.  
-The underlying **CCD videos** are not ours and are not redistributed here; obtain them from the original CCD release under its own license.
+Hallucination cost after adaptation is not significant (p=0.81).
 
----
+## Paper
 
-## Maintainers & contact
-
-- Repository: [harshalDharpure/Crash-X](https://github.com/harshalDharpure/Crash-X)
-- See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`REPOSITORY.md`](REPOSITORY.md) for tags, releases, and how to keep this research repo tidy.
+IEEE Access sources are in `ACCESS_latex_template_20240429/`.
+Upload `harshal.zip` to Overleaf; main file is `crashx_access.tex` (pdfLaTeX).

@@ -1,0 +1,23 @@
+\begin{table*}[!t]
+\centering
+\caption{\crashlogic{} training and inference settings.}
+\label{tab:hyperparams}
+\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Setting} & \textbf{Value} \\
+\midrule
+Backbone & Qwen2.5-VL-7B-Instruct \\
+Quantisation & 4-bit NF4 (bitsandbytes) \\
+Adapter & LoRA $r{=}16$, $\alpha_{\mathrm{LoRA}}{=}32$, dropout $0.05$ \\
+Learning rate / schedule & $2{\times}10^{-4}$, cosine \\
+Epochs / batch & 5 / 1 (grad.\ accum.\ 8) \\
+Keyframes / max side & 8 / 224\,px, no time stamps \\
+Max sequence length & 768 tokens \\
+Hardware / wall-clock & 1$\times$ A100-40GB / 3.4\,h \\
+Final training loss & 3.09 \\
+Decoding & Greedy; max 256 new tokens \\
+\tcd{} & Eq.~\eqref{eq:tcd}; reverse or shuffle negative \\
+\bottomrule
+\end{tabular}
+\end{table*}

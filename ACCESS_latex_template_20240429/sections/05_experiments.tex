@@ -1,0 +1,19 @@
+\section{Experimental Setup}
+\label{sec:setup}
+
+\paragraph{Systems.}
+Zero-shot systems are Qwen2.5-VL-7B and -3B~\cite{qwen25vl}, Qwen2-VL-2B~\cite{qwen2vl}, and LLaVA-NeXT-Video-7B~\cite{llavanextvideo}.
+All receive the prompt of Section~\ref{sec:input}; LLaVA-NeXT-Video additionally receives the sentence ``Provide Severity, Impact, Start, End, Vehicles, Weather, and Explanation.'' because it otherwise never emits the fields.
+\crashlogic{} is decoded greedily and with \tcd{} at $\alpha\in\{0.5,1.0,1.5,2.0\}$ (reverse), $\alpha{=}0.5$ (shuffle), and full SEASON ($\alpha{=}1.0$).
+Prior-only baselines emit a constant window ($[2,3]$, $[3,4]$, or $[2,4]$\,s) and no text.
+The full system list is Table~\ref{tab:baselines}.
+
+\paragraph{Decoding.}
+All systems decode greedily with at most 256 new tokens; \tcd{} applies Eq.~\eqref{eq:tcd} at every step.
+Zero-shot outputs that reach the cap are scored as emitted, which penalises systems that spend tokens on preamble.
+Full-NLI and the omission cost are the metrics least affected by this.
+
+\paragraph{Implementation.}
+PyTorch~2.6, Transformers~5.16, PEFT, and bitsandbytes 4-bit loading; inference on one A100-40GB.
+The NLI judge, bootstrap, and paired tests run on CPU from the released per-video outputs.
+A fixed seed (42) governs the split, the shuffle negative, and all resampling.

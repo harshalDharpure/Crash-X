@@ -1,0 +1,486 @@
+% ---------------------------------------------------------------------------
+% Backbones and Video-LLMs
+% ---------------------------------------------------------------------------
+@article{qwen25vl,
+  title   = {Qwen2.5-{VL} Technical Report},
+  author  = {Bai, Shuai and Chen, Keqin and Liu, Xuejing and Wang, Jialin and Ge, Wenbin and Song, Sibo and Dang, Kai and Wang, Peng and Wang, Shijie and Tang, Jun and Zhong, Humen and Zhu, Yuanzhi and Yang, Mingkun and Li, Zhaohai and Wan, Jianqiang and Wang, Pengfei and Ding, Wei and Fu, Zheren and Xu, Yiheng and Ye, Jiabo and Zhang, Xi and Xie, Tianbao and Cheng, Zesen and Zhang, Hang and Yang, Zhibo and Xu, Haiyang and Lin, Junyang},
+  journal = {arXiv preprint arXiv:2502.13923},
+  year    = {2025}
+}
+
+@article{qwen2vl,
+  title   = {Qwen2-{VL}: Enhancing Vision-Language Model's Perception of the World at Any Resolution},
+  author  = {Wang, Peng and Bai, Shuai and Tan, Sinan and Wang, Shijie and Fan, Zhihao and Bai, Jinze and Chen, Keqin and Liu, Xuejing and Wang, Jialin and Ge, Wenbin and Fan, Yang and Dang, Kai and Du, Mengfei and Ren, Xuancheng and Men, Rui and Liu, Dayiheng and Zhou, Chang and Zhou, Jingren and Lin, Junyang},
+  journal = {arXiv preprint arXiv:2409.12191},
+  year    = {2024}
+}
+
+@misc{llavanextvideo,
+  title        = {{LLaVA-NeXT}: A Strong Zero-shot Video Understanding Model},
+  author       = {Zhang, Yuanhan and Li, Bo and Liu, Haotian and Lee, Yong Jae and Gui, Liangke and Fu, Di and Feng, Jiashi and Liu, Ziwei and Li, Chunyuan},
+  year         = {2024},
+  howpublished = {\url{https://llava-vl.github.io/blog/2024-04-30-llava-next-video/}}
+}
+
+@inproceedings{videomme,
+  title     = {Video-{MME}: The First-Ever Comprehensive Evaluation Benchmark of Multi-modal {LLMs} in Video Analysis},
+  author    = {Fu, Chaoyou and Dai, Yuhan and Luo, Yongdong and Li, Lei and Ren, Shuhuai and Zhang, Renrui and Wang, Zihan and Zhou, Chenyu and Shen, Yunhang and Zhang, Mengdan and others},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2025}
+}
+
+@inproceedings{mvbench,
+  title     = {{MVBench}: A Comprehensive Multi-modal Video Understanding Benchmark},
+  author    = {Li, Kunchang and Wang, Yali and He, Yinan and Li, Yizhuo and Wang, Yi and Liu, Yi and Wang, Zun and Xu, Jilan and Chen, Guo and Luo, Ping and Wang, Limin and Qiao, Yu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {22195--22206}
+}
+
+% ---------------------------------------------------------------------------
+% Temporal shortcuts / single-frame bias in video-language models
+% ---------------------------------------------------------------------------
+@inproceedings{buch2022revisiting,
+  title     = {Revisiting the ``Video'' in Video-Language Understanding},
+  author    = {Buch, Shyamal and Eyzaguirre, Crist{\'o}bal and Gaidon, Adrien and Wu, Jiajun and Fei-Fei, Li and Niebles, Juan Carlos},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2022},
+  pages     = {2917--2927}
+}
+
+@inproceedings{lei2023singleframe,
+  title     = {Revealing Single Frame Bias for Video-and-Language Learning},
+  author    = {Lei, Jie and Berg, Tamara L. and Bansal, Mohit},
+  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2023},
+  pages     = {487--507}
+}
+
+@article{tvbench,
+  title   = {{TVBench}: Redesigning Video-Language Evaluation},
+  author  = {Cores, Daniel and Dorkenwald, Michael and Mucientes, Manuel and Snoek, Cees G. M. and Asano, Yuki M.},
+  journal = {arXiv preprint arXiv:2410.07752},
+  year    = {2024}
+}
+
+@article{geirhos2020shortcut,
+  title   = {Shortcut Learning in Deep Neural Networks},
+  author  = {Geirhos, Robert and Jacobsen, J{\"o}rn-Henrik and Michaelis, Claudio and Zemel, Richard and Brendel, Wieland and Bethge, Matthias and Wichmann, Felix A.},
+  journal = {Nature Machine Intelligence},
+  volume  = {2},
+  number  = {11},
+  pages   = {665--673},
+  year    = {2020}
+}
+
+% ---------------------------------------------------------------------------
+% Hallucination in (video) multimodal LLMs: benchmarks and surveys
+% ---------------------------------------------------------------------------
+@inproceedings{rohrbach2018chair,
+  title     = {Object Hallucination in Image Captioning},
+  author    = {Rohrbach, Anna and Hendricks, Lisa Anne and Burns, Kaylee and Darrell, Trevor and Saenko, Kate},
+  booktitle = {Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2018},
+  pages     = {4035--4045}
+}
+
+@inproceedings{pope,
+  title     = {Evaluating Object Hallucination in Large Vision-Language Models},
+  author    = {Li, Yifan and Du, Yifan and Zhou, Kun and Wang, Jinpeng and Zhao, Wayne Xin and Wen, Ji-Rong},
+  booktitle = {Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2023},
+  pages     = {292--305}
+}
+
+@inproceedings{hallusionbench,
+  title     = {{HallusionBench}: An Advanced Diagnostic Suite for Entangled Language Hallucination and Visual Illusion in Large Vision-Language Models},
+  author    = {Guan, Tianrui and Liu, Fuxiao and Wu, Xiyang and Xian, Ruiqi and Li, Zongxia and Liu, Xiaoyu and Wang, Xijun and Chen, Lichang and Huang, Furong and Yacoob, Yaser and Manocha, Dinesh and Zhou, Tianyi},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {14375--14385}
+}
+
+@article{videohallucer,
+  title   = {{VideoHallucer}: Evaluating Intrinsic and Extrinsic Hallucinations in Large Video-Language Models},
+  author  = {Wang, Yuxuan and Wang, Yueqian and Zhao, Dongyan and Xie, Cihang and Zheng, Zilong},
+  journal = {arXiv preprint arXiv:2406.16338},
+  year    = {2024}
+}
+
+@article{eventhallusion,
+  title   = {{EventHallusion}: Diagnosing Event Hallucinations in Video {LLMs}},
+  author  = {Zhang, Jiacheng and Jiao, Yang and Chen, Shaoxiang and Zhao, Na and Chen, Jingjing},
+  journal = {arXiv preprint arXiv:2409.16597},
+  year    = {2024}
+}
+
+@inproceedings{vidhalluc,
+  title     = {{VidHalluc}: Evaluating Temporal Hallucinations in Multimodal Large Language Models for Video Understanding},
+  author    = {Li, Chaoyu and Im, Eun Woo and Fazli, Pooyan},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2025},
+  pages     = {13723--13733}
+}
+
+@inproceedings{tempcompass,
+  title     = {{TempCompass}: Do Video {LLMs} Really Understand Videos?},
+  author    = {Liu, Yuanxin and Li, Shicheng and Liu, Yi and Wang, Yuxiang and Ren, Shuhuai and Li, Lei and Chen, Sishuo and Sun, Xu and Hou, Lu},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+  year      = {2024},
+  pages     = {8731--8772}
+}
+
+@inproceedings{argus2025,
+  title     = {{ARGUS}: Hallucination and Omission Evaluation in Video-{LLMs}},
+  author    = {Rawal, Ruchit and Shirkavand, Reza and Huang, Heng and Somepalli, Gowthami and Goldstein, Tom},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  year      = {2025},
+  pages     = {20280--20290}
+}
+
+@article{ji2023survey,
+  title   = {Survey of Hallucination in Natural Language Generation},
+  author  = {Ji, Ziwei and Lee, Nayeon and Frieske, Rita and Yu, Tiezheng and Su, Dan and Xu, Yan and Ishii, Etsuko and Bang, Ye Jin and Madotto, Andrea and Fung, Pascale},
+  journal = {ACM Computing Surveys},
+  volume  = {55},
+  number  = {12},
+  pages   = {1--38},
+  year    = {2023}
+}
+
+@inproceedings{maynez2020faithfulness,
+  title     = {On Faithfulness and Factuality in Abstractive Summarization},
+  author    = {Maynez, Joshua and Narayan, Shashi and Bohnet, Bernd and McDonald, Ryan},
+  booktitle = {Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2020},
+  pages     = {1906--1919}
+}
+
+@inproceedings{gekhman2024finetuning,
+  title     = {Does Fine-Tuning {LLMs} on New Knowledge Encourage Hallucinations?},
+  author    = {Gekhman, Zorik and Yona, Gal and Aharoni, Roee and Eyal, Matan and Feder, Amir and Reichart, Roi and Herzig, Jonathan},
+  booktitle = {Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2024},
+  pages     = {7765--7784}
+}
+
+% ---------------------------------------------------------------------------
+% Decoding-time hallucination mitigation
+% ---------------------------------------------------------------------------
+@inproceedings{li2023cd,
+  title     = {Contrastive Decoding: Open-ended Text Generation as Optimization},
+  author    = {Li, Xiang Lisa and Holtzman, Ari and Fried, Daniel and Liang, Percy and Eisner, Jason and Hashimoto, Tatsunori and Zettlemoyer, Luke and Lewis, Mike},
+  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2023},
+  pages     = {12286--12312}
+}
+
+@inproceedings{vcd,
+  title     = {Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding},
+  author    = {Leng, Sicong and Zhang, Hang and Chen, Guanzheng and Li, Xin and Lu, Shijian and Miao, Chunyan and Bing, Lidong},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {13872--13882}
+}
+
+@inproceedings{opera,
+  title     = {{OPERA}: Alleviating Hallucination in Multi-Modal Large Language Models via Over-Trust Penalty and Retrospection-Allocation},
+  author    = {Huang, Qidong and Dong, Xiaoyi and Zhang, Pan and Wang, Bin and He, Conghui and Wang, Jiaqi and Lin, Dahua and Zhang, Weiming and Yu, Nenghai},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {13418--13427}
+}
+
+@inproceedings{dola,
+  title     = {{DoLa}: Decoding by Contrasting Layers Improves Factuality in Large Language Models},
+  author    = {Chuang, Yung-Sung and Xie, Yujia and Luo, Hongyin and Kim, Yoon and Glass, James and He, Pengcheng},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2024}
+}
+
+@inproceedings{m3id,
+  title     = {Multi-Modal Hallucination Control by Visual Information Grounding},
+  author    = {Favero, Alessandro and Zancato, Luca and Trager, Matthew and Choudhary, Siddharth and Perera, Pramuditha and Achille, Alessandro and Swaminathan, Ashwin and Soatto, Stefano},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {14303--14312}
+}
+
+@inproceedings{icd,
+  title     = {Mitigating Hallucinations in Large Vision-Language Models with Instruction Contrastive Decoding},
+  author    = {Wang, Xintong and Pan, Jingheng and Ding, Liang and Biemann, Chris},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+  year      = {2024},
+  pages     = {15840--15853}
+}
+
+@inproceedings{season2025,
+  title     = {{SEASON}: Mitigating Temporal Hallucination in Video Large Language Models via Self-Diagnostic Contrastive Decoding},
+  author    = {Wu, Chang-Hsun and Chang, Kai-Po and Sheng, Yu-Yang and Chung, Hung-Kai and Wang, Kuei-Chun and Wang, Yu-Chiang Frank},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2026},
+  note      = {arXiv:2512.04643}
+}
+
+% ---------------------------------------------------------------------------
+% Temporal grounding in Video-LLMs
+% ---------------------------------------------------------------------------
+@inproceedings{timechat,
+  title     = {{TimeChat}: A Time-sensitive Multimodal Large Language Model for Long Video Understanding},
+  author    = {Ren, Shuhuai and Yao, Linli and Li, Shicheng and Sun, Xu and Hou, Lu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {14313--14323}
+}
+
+@inproceedings{vtimellm,
+  title     = {{VTimeLLM}: Empower {LLM} to Grasp Video Moments},
+  author    = {Huang, Bin and Wang, Xin and Chen, Hong and Song, Zihan and Zhu, Wenwu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {14271--14280}
+}
+
+@inproceedings{lita,
+  title     = {{LITA}: Language Instructed Temporal-Localization Assistant},
+  author    = {Huang, De-An and Liao, Shijia and Radhakrishnan, Subhashree and Yin, Hongxu and Molchanov, Pavlo and Yu, Zhiding and Kautz, Jan},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  year      = {2024}
+}
+
+% ---------------------------------------------------------------------------
+% Traffic accident video understanding and driving VLMs
+% ---------------------------------------------------------------------------
+@inproceedings{bao2020nondeterministic,
+  title     = {Uncertainty-based Traffic Accident Anticipation with Spatio-Temporal Relational Learning},
+  author    = {Bao, Wentao and Yu, Qi and Kong, Yu},
+  booktitle = {Proceedings of the 28th ACM International Conference on Multimedia (ACM MM)},
+  year      = {2020},
+  pages     = {2682--2690},
+  doi       = {10.1145/3394171.3413827}
+}
+
+@inproceedings{chan2016dad,
+  title     = {Anticipating Accidents in Dashcam Videos},
+  author    = {Chan, Fu-Hsiang and Chen, Yu-Ting and Xiang, Yu and Sun, Min},
+  booktitle = {Proceedings of the Asian Conference on Computer Vision (ACCV)},
+  year      = {2016},
+  pages     = {136--153}
+}
+
+@inproceedings{yao2019a3d,
+  title     = {Unsupervised Traffic Accident Detection in First-Person Videos},
+  author    = {Yao, Yu and Xu, Mingze and Wang, Yuchen and Crandall, David J. and Atkins, Ella M.},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  year      = {2019},
+  pages     = {273--280}
+}
+
+@article{yao2022dota,
+  title   = {{DoTA}: Unsupervised Detection of Traffic Anomaly in Driving Videos},
+  author  = {Yao, Yu and Wang, Xizi and Xu, Mingze and Pu, Zelin and Wang, Yuchen and Atkins, Ella and Crandall, David J.},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume  = {45},
+  number  = {1},
+  pages   = {444--459},
+  year    = {2023}
+}
+
+@article{fang2021dada,
+  title   = {{DADA}: Driver Attention Prediction in Driving Accident Scenarios},
+  author  = {Fang, Jianwu and Yan, Dingxin and Qiao, Jiahuan and Xue, Jianru and Yu, Hongkai},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {23},
+  number  = {6},
+  pages   = {4959--4971},
+  year    = {2022}
+}
+
+@inproceedings{fang2024mmau,
+  title     = {Abductive Ego-View Accident Video Understanding for Safe Driving Perception},
+  author    = {Fang, Jianwu and Li, Lei-Lei and Zhou, Junfei and Xiao, Junbin and Yu, Hongkai and Lv, Chen and Xue, Jianru and Chua, Tat-Seng},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2024},
+  pages     = {22030--22040}
+}
+
+@inproceedings{vruaccident,
+  title     = {{VRU}-Accident: A Vision-Language Benchmark for Video Question Answering and Dense Captioning for Accident Scene Understanding},
+  author    = {Kim, Younggun and Abdelrahman, Ahmed S. and Abdel-Aty, Mohamed},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV) Workshops},
+  year      = {2025},
+  pages     = {761--771}
+}
+
+@inproceedings{drivelm,
+  title     = {{DriveLM}: Driving with Graph Visual Question Answering},
+  author    = {Sima, Chonghao and Renz, Katrin and Chitta, Kashyap and Chen, Li and Zhang, Hanxue and Xie, Chengen and Bei{\ss}wenger, Jens and Luo, Ping and Geiger, Andreas and Li, Hongyang},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  year      = {2024}
+}
+
+@article{drivegpt4,
+  title   = {{DriveGPT4}: Interpretable End-to-End Autonomous Driving via Large Language Model},
+  author  = {Xu, Zhenhua and Zhang, Yujia and Xie, Enze and Zhao, Zhen and Guo, Yong and Wong, Kwan-Yee K. and Li, Zhenguo and Zhao, Hengshuang},
+  journal = {IEEE Robotics and Automation Letters},
+  volume  = {9},
+  number  = {10},
+  pages   = {8186--8193},
+  year    = {2024}
+}
+
+@inproceedings{lingoqa,
+  title     = {{LingoQA}: Visual Question Answering for Autonomous Driving},
+  author    = {Marcu, Ana-Maria and Chen, Long and H{\"u}nermann, Jan and Karnsund, Alice and Hanotte, Benoit and Chidananda, Prajwal and Nair, Saurabh and Badrinarayanan, Vijay and Kendall, Alex and Shotton, Jamie and Arani, Elahe and Sinavski, Oleg},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  year      = {2024}
+}
+
+@inproceedings{drivevlm,
+  title     = {{DriveVLM}: The Convergence of Autonomous Driving and Large Vision-Language Models},
+  author    = {Tian, Xiaoyu and Gu, Junru and Li, Bailin and Liu, Yicheng and Wang, Yang and Zhao, Zhiyong and Zhan, Kun and Jia, Peng and Lang, Xianpeng and Zhao, Hang},
+  booktitle = {Conference on Robot Learning (CoRL)},
+  year      = {2024}
+}
+
+@inproceedings{dolphins,
+  title     = {Dolphins: Multimodal Language Model for Driving},
+  author    = {Ma, Yingzi and Cao, Yulong and Sun, Jiachen and Pavone, Marco and Xiao, Chaowei},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  year      = {2024}
+}
+
+% ---------------------------------------------------------------------------
+% Parameter-efficient fine-tuning
+% ---------------------------------------------------------------------------
+@inproceedings{lora,
+  title     = {{LoRA}: Low-Rank Adaptation of Large Language Models},
+  author    = {Hu, Edward J. and Shen, Yelong and Wallis, Phillip and Allen-Zhu, Zeyuan and Li, Yuanzhi and Wang, Shean and Wang, Lu and Chen, Weizhu},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2022}
+}
+
+@inproceedings{qlora,
+  title     = {{QLoRA}: Efficient Finetuning of Quantized Large Language Models},
+  author    = {Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023}
+}
+
+% ---------------------------------------------------------------------------
+% Evaluation metrics and faithfulness judges
+% ---------------------------------------------------------------------------
+@inproceedings{papineni2002bleu,
+  title     = {{BLEU}: a Method for Automatic Evaluation of Machine Translation},
+  author    = {Papineni, Kishore and Roukos, Salim and Ward, Todd and Zhu, Wei-Jing},
+  booktitle = {Proceedings of the 40th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2002},
+  pages     = {311--318}
+}
+
+@inproceedings{lin2004rouge,
+  title     = {{ROUGE}: A Package for Automatic Evaluation of Summaries},
+  author    = {Lin, Chin-Yew},
+  booktitle = {Text Summarization Branches Out: Proceedings of the ACL-04 Workshop},
+  year      = {2004},
+  pages     = {74--81}
+}
+
+@inproceedings{banerjee2005meteor,
+  title     = {{METEOR}: An Automatic Metric for {MT} Evaluation with Improved Correlation with Human Judgments},
+  author    = {Banerjee, Satanjeev and Lavie, Alon},
+  booktitle = {Proceedings of the ACL Workshop on Intrinsic and Extrinsic Evaluation Measures for Machine Translation and/or Summarization},
+  year      = {2005},
+  pages     = {65--72}
+}
+
+@inproceedings{vedantam2015cider,
+  title     = {{CIDEr}: Consensus-based Image Description Evaluation},
+  author    = {Vedantam, Ramakrishna and Zitnick, C. Lawrence and Parikh, Devi},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  year      = {2015},
+  pages     = {4566--4575}
+}
+
+@inproceedings{zhang2020bertscore,
+  title     = {{BERTScore}: Evaluating Text Generation with {BERT}},
+  author    = {Zhang, Tianyi and Kishore, Varsha and Wu, Felix and Weinberger, Kilian Q. and Artzi, Yoav},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2020}
+}
+
+@inproceedings{post2018sacrebleu,
+  title     = {A Call for Clarity in Reporting {BLEU} Scores},
+  author    = {Post, Matt},
+  booktitle = {Proceedings of the Third Conference on Machine Translation (WMT)},
+  year      = {2018},
+  pages     = {186--191}
+}
+
+@inproceedings{he2023debertav3,
+  title     = {{DeBERTaV3}: Improving {DeBERTa} using {ELECTRA}-Style Pre-Training with Gradient-Disentangled Embedding Sharing},
+  author    = {He, Pengcheng and Gao, Jianfeng and Chen, Weizhu},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2023}
+}
+
+@inproceedings{kryscinski2020factcc,
+  title     = {Evaluating the Factual Consistency of Abstractive Text Summarization},
+  author    = {Kryscinski, Wojciech and McCann, Bryan and Xiong, Caiming and Socher, Richard},
+  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2020},
+  pages     = {9332--9346}
+}
+
+@article{laban2022summac,
+  title   = {{SummaC}: Re-Visiting {NLI}-based Models for Inconsistency Detection in Summarization},
+  author  = {Laban, Philippe and Schnabel, Tobias and Bennett, Paul N. and Hearst, Marti A.},
+  journal = {Transactions of the Association for Computational Linguistics},
+  volume  = {10},
+  pages   = {163--177},
+  year    = {2022}
+}
+
+@inproceedings{zha2023alignscore,
+  title     = {{AlignScore}: Evaluating Factual Consistency with a Unified Alignment Function},
+  author    = {Zha, Yuheng and Yang, Yichi and Li, Ruichen and Hu, Zhiting},
+  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2023},
+  pages     = {11328--11348}
+}
+
+@inproceedings{min2023factscore,
+  title     = {{FActScore}: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation},
+  author    = {Min, Sewon and Krishna, Kalpesh and Lyu, Xinxi and Lewis, Mike and Yih, Wen-tau and Koh, Pang Wei and Iyyer, Mohit and Zettlemoyer, Luke and Hajishirzi, Hannaneh},
+  booktitle = {Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2023},
+  pages     = {12076--12100}
+}
+
+% ---------------------------------------------------------------------------
+% Statistics
+% ---------------------------------------------------------------------------
+@inproceedings{dror2018hitchhiker,
+  title     = {The Hitchhiker's Guide to Testing Statistical Significance in Natural Language Processing},
+  author    = {Dror, Rotem and Baumer, Gili and Shlomov, Segev and Reichart, Roi},
+  booktitle = {Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2018},
+  pages     = {1383--1392}
+}
+
+@book{efron1993bootstrap,
+  title     = {An Introduction to the Bootstrap},
+  author    = {Efron, Bradley and Tibshirani, Robert J.},
+  publisher = {Chapman \& Hall/CRC},
+  year      = {1993}
+}
+
+@article{wilcoxon1945,
+  title   = {Individual Comparisons by Ranking Methods},
+  author  = {Wilcoxon, Frank},
+  journal = {Biometrics Bulletin},
+  volume  = {1},
+  number  = {6},
+  pages   = {80--83},
+  year    = {1945}
+}

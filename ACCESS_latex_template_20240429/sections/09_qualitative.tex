@@ -1,0 +1,21 @@
+\section{Qualitative Analysis}
+\label{sec:qual}
+
+Table~\ref{tab:qualitative} shows three systems on two test videos that illustrate the omission/hallucination asymmetry; a no-crash example is in Table~\ref{tab:qualitative-full}.
+
+\input{figures/fig2_qualitative}
+
+\paragraph{Video \code{001227}---adaptation recovers the narrative.}
+The reference describes an oncoming white car on a curved two-lane road and a front-left to front-left impact after an evasive turn.
+Zero-shot Qwen2.5-VL-7B emits markdown scaffolding and no narrative: \textsc{No-Narrative}, ROUGE-L $0$.
+\crashlogic{} names the white oncoming car, a loss of control, and a front/left impact; agents and cause family match (ROUGE-L $0.45$).
+\tcd{} keeps the agents and edges closer to the reference wording ($0.50$).
+Both adapted outputs place the crash at $[2,3]$\,s; the reference window is $[3,4]$\,s (tIoU $0$).
+
+\paragraph{Video \code{000104}---adaptation hallucinates the agent.}
+The reference: the camera car strikes the rear of a slow \emph{black truck}; a red bus passes nearby.
+Zero-shot text discusses weather and never reaches a collision.
+\crashlogic{} constructs a coherent rear-end story---but with a \emph{red car} as the lead vehicle: \textsc{Wrong-Agent}.
+\tcd{} keeps the red car and adds unsupported parked cars and pedestrians.
+Under BLEU/ROUGE the adapted outputs score $0.41$ and $0.31$ against $0.09$ for zero-shot, so lexical metrics rank a specific wrong explanation far above a vague one.
+This is the case that motivates scoring hallucination separately from omission.

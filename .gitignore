@@ -11,32 +11,26 @@ __pycache__/
 .vscode/
 *.swp
 
-# Large data (download separately — see README)
+# Large video data (local only)
 video1500/
 *.mp4
 
-# Model weights (>100MB GitHub limit; train locally or see MODEL_WEIGHTS.md)
+# Model weights (train locally)
 outputs/crashlogic_7b_lora/adapter_model.safetensors
 outputs/crashlogic_7b_lora/checkpoint-*/
 outputs/crashlogic_7b_lora/training_args.bin
 outputs/crashlogic_7b_lora/tokenizer.json
-
-# Cache
-.cache/
-*.log.nohup
-
-# Runtime logs / PIDs
-results/logs/
-*.pid
-
-# Incomplete / aborted 16-frame retrain (not used in explanation paper)
 outputs/crashlogic_7b_lora_f16/
 
-# OS
+# Cache / runtime
+.cache/
+*.log.nohup
+results/logs/
+*.pid
 .DS_Store
 Thumbs.db
 
-# IEEE Access: pristine template download (redundant copy) and build artifacts
+# Access LaTeX build artifacts
 ACCESS_latex_template_20240429/ACCESS_latex_template_20240429/
 ACCESS_latex_template_20240429/*.aux
 ACCESS_latex_template_20240429/*.bbl
@@ -47,9 +41,4 @@ ACCESS_latex_template_20240429/*.synctex.gz
 ACCESS_latex_template_20240429/build*.log
 ACCESS_latex_template_20240429/figures/_build/
 ACCESS_latex_template_20240429/figures/*.log
-paper/ieee_crashx/*.aux
-paper/ieee_crashx/*.log
-paper/ieee_crashx/*.blg
-paper/ieee_crashx/*.out
 ACCESS_latex_template_20240429/crashx_access.pdf
-paper/ieee_crashx/main.pdf

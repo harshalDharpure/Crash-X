@@ -1,0 +1,7 @@
+% Picture source: src/fig4_temporal_prior.tikz -- rebuild the PDF with ./render_figures.sh
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig4_temporal_prior.pdf}
+\caption{The temporal prior. Ground-truth crash starts span the whole clip; the adapted model predicts only $2$\,s or $3$\,s, always with a 1-second window, matching the two most frequent training windows. Predicted and true starts are uncorrelated (Spearman $\rho{=}0.009$ greedy, $0.028$ \tcd), and a constant $[3,4]$\,s window scores higher tIoU than either system (Table~\ref{tab:e3}).}
+\label{fig:prior}
+\end{figure}
