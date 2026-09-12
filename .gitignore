@@ -29,16 +29,3 @@ results/logs/
 *.pid
 .DS_Store
 Thumbs.db
-
-# Access LaTeX build artifacts
-ACCESS_latex_template_20240429/ACCESS_latex_template_20240429/
-ACCESS_latex_template_20240429/*.aux
-ACCESS_latex_template_20240429/*.bbl
-ACCESS_latex_template_20240429/*.blg
-ACCESS_latex_template_20240429/*.log
-ACCESS_latex_template_20240429/*.out
-ACCESS_latex_template_20240429/*.synctex.gz
-ACCESS_latex_template_20240429/build*.log
-ACCESS_latex_template_20240429/figures/_build/
-ACCESS_latex_template_20240429/figures/*.log
-ACCESS_latex_template_20240429/crashx_access.pdf

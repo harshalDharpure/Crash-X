@@ -28,7 +28,6 @@ python -m crashx.data.process_ccd \
 
 ```text
 crashx/                              training, inference, eval
-ACCESS_latex_template_20240429/      IEEE Access paper (harshal.zip for Overleaf)
 results/                             predictions and metric dumps
 scripts/                             experiment shell scripts
 outputs/crashlogic_7b_lora/          LoRA config (large weights gitignored)
@@ -81,8 +80,3 @@ ArgusCost H/O, NLI, bootstrap + Wilcoxon).
 | Constant window [3,4]s | — | — | — | — | 0.408 |
 
 Hallucination cost after adaptation is not significant (p=0.81).
-
-## Paper
-
-IEEE Access sources are in `ACCESS_latex_template_20240429/`.
-Upload `harshal.zip` to Overleaf; main file is `crashx_access.tex` (pdfLaTeX).

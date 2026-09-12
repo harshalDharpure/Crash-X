@@ -1,7 +1,0 @@
-% Picture source: src/fig1_pipeline.tikz -- rebuild the PDF with ./render_figures.sh
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=\textwidth]{figures/fig1_pipeline.pdf}
-\caption{CrashX systems and evaluation stack. \crashlogic{} is a QLoRA adaptation of Qwen2.5-VL-7B trained to emit serialised forensic fields and a free-text Explanation; Temporal Contrastive Decoding (\tcd) optionally contrasts its logits against a reversed-frame negative at decode time. Every output is scored for lexical overlap, entailment, separate omission and hallucination costs with a field-level decomposition, and temporal grounding against prior-only baselines, with all comparisons paired over the same 150 test videos.}
-\label{fig:pipeline}
-\end{figure*}
